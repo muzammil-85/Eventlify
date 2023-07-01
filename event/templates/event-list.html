@@ -1,0 +1,145 @@
+{% extends "base.html" %}{% load staticfiles %}{% block head_title %}Home | {{
+block.super }}{% endblock %}
+<main>{% block content %}</main>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
+
+<style>
+  body {
+    margin: 0;
+    font-family: Open-sans, sans-serif;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: Raleway, Helvetica, sans-serif;
+  }
+  h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    margin-top: 0;
+  }
+  .padded {
+    padding: 100px 0;
+  }
+  .wrapper-grey {
+    background: #f4f4f4;
+  }
+  .avatar {
+    width: 30px;
+    border-radius: 50%;
+  }
+  .avatar-bordered {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    border: white 1px solid;
+  }
+  .avatar-large {
+    width: 50px;
+  }
+  /* .banner {
+            color: white;
+            text-align: center;
+            height: 100vh;
+            background-size: cover !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .banner h1 {
+            font-size: 50px;
+            font-weight: bold;
+            text-shadow: 0px 1px rgba(0, 0, 0, 0.2);
+          }
+          .banner p {
+            font-size: 25px;
+            font-weight: lighter;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 50px;
+          } */
+
+  .card {
+    height: 500px;
+    background-size: cover !important;
+    color: white;
+    position: relative;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  .card-user {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+  .card-category {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+  }
+  .card-description {
+    position: absolute;
+    bottom: 1rem;
+    left: 10px;
+  }
+  .card-description h2 {
+    font-size: 20px;
+  }
+  .card-description p {
+    font-size: 15px;
+  }
+  .card-link {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 2;
+    background: black;
+    opacity: 0;
+  }
+  .card-link:hover {
+    opacity: 0.1;
+  }
+  .features img {
+    width: 100px;
+  }
+  .features h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .features p {
+    font-size: 15px;
+    font-weight: lighter;
+  }
+</style>
+<div class="wrapper-grey padded">
+  <div class="container">
+    <div class="row">
+
+    
+    {% for data in event_list %}
+    <div class="col-xs-12 col-sm-4">
+      <div
+        class="card"
+        style="box-shadow:10px 10px;background: linear-gradient(180deg,rgba(0,0,0,0.0), rgba(0,0,0,0.6)), url('/media/{{ data.event_pic }}');"
+      >
+        <div class="card-category">
+          {% if data.registration_open %}<span class="badge rounded-pill bg-success fs-6">Open</span>{% else %}<span class="badge rounded-pill bg-danger fs-6">Closed</span>{% endif %}
+        </div>
+        <div class="card-description" style="color: #d7d7d7;">
+          <h2 style="margin-bottom: 1rem;">{{ data.event_name }}</h2>
+          <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_date }}</p>
+          <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
+        </div>
+        <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.type}}</span></p>
+        <a
+          class="card-link"
+          href="{% url 'event:event_detail' data.slug %}"
+        ></a>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+  </div>
+</div>
+
+{% endblock %}

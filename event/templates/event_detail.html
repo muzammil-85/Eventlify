@@ -1,0 +1,456 @@
+{% extends 'base.html' %}{% load staticfiles %}{% block head_title %}Event
+Detail | {{ block.super }}{% endblock %}
+<main>{% block content %}
+
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Oswald');
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box
+}
+
+body {
+    background-color: #dadde6;
+    font-family: arial
+}
+
+.fl-left {
+    float: left
+}
+
+.fl-right {
+    float: right
+}
+
+h1 {
+    text-transform: uppercase;
+    font-weight: 900;
+    border-left: 10px solid #fec500;
+    padding-left: 10px;
+    margin-bottom: 30px
+}
+
+.row {
+    overflow: hidden
+}
+
+.card {
+    display: table-row;
+    width: 49%;
+    background-color: #fff;
+    color: #989898;
+    margin-bottom: 10px;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    border-radius: 4px;
+    position: relative
+}
+
+.card+.card {
+    margin-left: 2%
+}
+
+.date {
+    display: table-cell;
+    width: 25%;
+    position: relative;
+    text-align: center;
+    border-right: 2px dashed #dadde6
+}
+
+.date:before,
+.date:after {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-color: #DADDE6;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 1;
+    border-radius: 50%
+}
+
+.date:after {
+    top: auto;
+    bottom: -15px
+}
+
+.date time {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%)
+}
+
+.date time span {
+    display: block
+}
+
+.date time span:first-child {
+    color: #2b2b2b;
+    font-weight: 600;
+    font-size: 250%
+}
+
+.date time span:last-child {
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: -10px
+}
+
+.card-cont {
+    display: table-cell;
+    width: 75%;
+    font-size: 85%;
+    padding: 10px 10px 30px 50px
+}
+
+.card-cont h3 {
+    color: #3C3C3C;
+    font-size: 130%
+}
+
+.row:last-child .card:last-of-type .card-cont h3 {
+    text-decoration: line-through
+}
+
+.card-cont>div {
+    display: table-row
+}
+
+.card-cont .even-date i,
+.card-cont .even-info i,
+.card-cont .even-date time,
+.card-cont .even-info p {
+    display: table-cell
+}
+
+.card-cont .even-date i,
+.card-cont .even-info i {
+    padding: 5% 5% 0 0
+}
+
+.card-cont .even-info p {
+    padding: 30px 50px 0 0
+}
+
+.card-cont .even-date time span {
+    display: block
+}
+
+.card-cont a {
+    display: block;
+    text-decoration: none;
+    width: 80px;
+    height: 30px;
+    font-size: smaller;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px
+}
+
+.row:last-child .card:first-child .card-cont a {
+    background-color: #037FDD
+}
+
+.row:last-child .card:last-child .card-cont a {
+    background-color: #F8504C
+}
+
+@media screen and (max-width: 860px) {
+    .card {
+        display: block;
+        float: none;
+        width: 100%;
+        margin-bottom: 10px
+    }
+    .card+.card {
+        margin-left: 0
+    }
+    .card-cont .even-date,
+    .card-cont .even-info {
+        font-size: 75%
+    }
+}
+    </style>
+
+
+
+
+<div class="bg-blue pt-4" style="margin-top: -32px">
+  <div class="container pt-md-4 text-md-left text-center">
+    <div class="d-flex flex-md-row flex-column">
+      <img
+        src="/media/{{ obj.event_pic }}"
+        alt="logo"
+        class="mb-3"
+        style="height: 100px; margin: auto; margin-top: 0"
+      />
+      <div class="flex-md-grow-1 text-white px-3 mb-3">
+        <h1 class="mb-3">{{ obj.event_name }}</h1>
+        {% if owner %}
+        <a
+          class="btn btn-custom mb-4"
+          style="border: 2px solid #ffffff; padding: 0.4rem 4rem"
+          href="{% url 'event:update_event' obj.slug %}"
+          >Update</a
+        >{% elif registered %}
+        <button
+          class="btn btn-custom mb-4"
+          style="border: 2px solid #ffffff; padding: 0.4rem 4rem"
+          disabled
+        >
+          Already Registered
+        </button>
+        {% else %}{% if now <= obj.registration_end and obj.registration_open %}
+        <a
+          class="btn btn-custom mb-4"
+          style="border: 2px solid #ffffff; padding: 0.4rem 4rem"
+          onclick='return confirm("Are you sure to register in {{ obj.event_name }}")'
+          href="{% url 'registration:register_event' obj %}"
+          >Register Now</a
+        >{% else %}
+        <button
+          class="btn btn-custom mb-4"
+          style="border: 2px solid #ffffff; padding: 0.4rem 4rem"
+          disabled
+        >
+          Registration Closed</button
+        >{% endif %}{% endif %}
+        <p>Registration last Date: {{ obj.registration_end }}</p>
+      </div>
+      <div class="text-white mb-3 col-lg-3" style="margin: auto">
+        <p>Fee: <span style="font-size: 40px">₹ {{ obj.fees }}</span></p>
+        <p>Event Date: {{ obj.event_date }}</p>
+      </div>
+    </div>
+    <div id="demo" class="collapse">
+      <div class="px-3 px-md-5 text-white">
+        {#
+        <p class="mb-4">
+          Learn most demanding language with python and data visualization
+        </p>
+        #}
+        <ul>
+          <li class="mb-2">Registration Start: {{ obj.registration_start }}</li>
+          <li class="mb-2">Eligible Branch: {{ obj.eligible_branches }}</li>
+          <li class="mb-2">Eligible Year: {{ obj.eligible_year }}</li>
+          <li class="mb-2">
+            Outside of ABES Engineering College organizer 
+            {% if obj.outside_organizer == 1 %}Allowed{% else %}Not Allowed{% endif %}
+          </li>
+          <li class="mb-2">Venue: {{ obj.venue }}</li>
+        </ul>
+        <p>Duration: {{ obj.duration_number }} {{ obj.duration_string }}</p>
+      </div>
+    </div>
+  </div>
+  <div style="text-align: center">
+    <button
+      class="btn text-white"
+      data-toggle="collapse"
+      data-target="#demo"
+      style="
+        border-radius: 50% !important;
+        height: 95px;
+        font-size: small;
+        margin-bottom: -45px;
+        background-color: rgba(0, 183, 209, 1);
+        background-image: linear-gradient(
+          rgba(0, 183, 209, 1),
+          rgba(20, 146, 230, 1)
+        );
+      "
+    >
+      Show More<br /><span
+        style="font-size: x-large; line-height: 0; margin-bottom: -3px"
+        >&#8744;</span
+      >
+    </button>
+  </div>
+</div>
+
+<section class="container">
+    <h1>Events</h1>
+      <div class="row">
+        <article class="card fl-left">
+          <section class="date">
+            <time datetime="23th feb">
+              <span>23</span><span>feb</span>
+            </time>
+          </section>
+          <section class="card-cont">
+            <small>dj khaled</small>
+            <h3>live in sydney</h3>
+            <div class="even-date">
+             <i class="fa fa-calendar"></i>
+             <time>
+               <span>wednesday 28 december 2014</span>
+               <span>08:55pm to 12:00 am</span>
+             </time>
+            </div>
+            <div class="even-info">
+              <i class="fa fa-map-marker"></i>
+              <p>
+                nexen square for people australia, sydney
+              </p>
+            </div>
+            <a class="btn btn-success" href="#">tickets</a>
+          </section>
+        </article>
+        <article class="card fl-left">
+          <section class="date">
+            <time datetime="23th feb">
+              <span>23</span><span>feb</span>
+            </time>
+          </section>
+          <section class="card-cont">
+            <small>dj khaled</small>
+            <h3>corner obsest program</h3>
+            <div class="even-date">
+             <i class="fa fa-calendar"></i>
+             <time>
+               <span>wednesday 28 december 2014</span>
+               <span>08:55pm to 12:00 am</span>
+             </time>
+            </div>
+            <div class="even-info">
+              <i class="fa fa-map-marker"></i>
+              <p>
+                nexen square for people australia, sydney
+              </p>
+            </div>
+            <a class="btn btn-success disabled" href="#">tickets</a>
+
+          </section>
+        </article>
+      </div>
+      <div class="row">
+        <article class="card fl-left">
+          <section class="date">
+            <time datetime="23th feb">
+              <span>23</span><span>feb</span>
+            </time>
+          </section>
+          <section class="card-cont">
+            <small>dj khaled</small>
+            <h3>music kaboom festivel</h3>
+            <div class="even-date">
+             <i class="fa fa-calendar"></i>
+             <time>
+               <span>wednesday 28 december 2014</span>
+               <span>08:55pm to 12:00 am</span>
+             </time>
+            </div>
+            <div class="even-info">
+              <i class="fa fa-map-marker"></i>
+              <p>
+                nexen square for people australia, sydney
+              </p>
+            </div>
+            <a href="#">booked</a>
+          </section>
+        </article>
+        <article class="card fl-left">
+          <section class="date">
+            <time datetime="23th feb">
+              <span>23</span><span>feb</span>
+            </time>
+          </section>
+          <section class="card-cont">
+            <small>dj khaled</small>
+            <h3>hello dubai festivel</h3>
+            <div class="even-date">
+             <i class="fa fa-calendar"></i>
+             <time>
+               <span>wednesday 28 december 2014</span>
+               <span>08:55pm to 12:00 am</span>
+             </time>
+            </div>
+            <div class="even-info">
+              <i class="fa fa-map-marker"></i>
+              <p>
+                nexen square for people australia, sydney
+              </p>
+            </div>
+            <a href="#">cancel</a>
+          </section>
+        </article>
+      </div>
+    </section>
+
+<div class="container mt-5 p-4">
+  <div class="d-flex justify-content-md-between flex-md-row flex-column">
+    <div class="text-center align-self-center pb-3">
+      <h2>Pre-Requisites</h2>
+      <hr style="width: 110px; border: 1px solid rgba(0, 0, 0, 0.62)" />
+      <div
+        style="
+          border-left: 2px solid grey;
+          border-right: 2px solid grey;
+          border-radius: 50rem;
+          width: 432px;
+          padding: 20px 0;
+        "
+      >
+        <p>{{ obj.pre_requisites_1 }}</p>
+        <p>{{ obj.pre_requisites_2 }}</p>
+        <p>{{ obj.pre_requisites_3 }}</p>
+      </div>
+    </div>
+    <div class="text-center align-self-center pb-3">
+      <h2>Learning OutCome</h2>
+      <hr style="width: 110px; border: 1px solid rgba(0, 0, 0, 0.62)" />
+      <div
+        style="
+          border-left: 2px solid grey;
+          border-right: 2px solid grey;
+          border-bottom: 2px solid grey;
+          border-radius: 2rem;
+          width: 350px;
+          padding: 20px;
+        "
+      >
+        <p>{{ obj.learning_outcome_1 }}</p>
+        <p>{{ obj.learning_outcome_2 }}</p>
+        <p>{{ obj.learning_outcome_3 }}</p>
+        <p>{{ obj.learning_outcome_4 }}</p>
+        <p>{{ obj.learning_outcome_5 }}</p>
+        <p>{{ obj.learning_outcome_6 }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container text-center pb-5">
+  <hr style="width: 70%; border-top: 4px solid #1492e6; border-radius: 50rem" />
+  <h2 class="mt-5">Course Content</h2>
+  <hr style="width: 110px; border: 1px solid rgba(0, 0, 0, 0.62)" />
+  <div
+    class="p-4 p-md-5 mt-5"
+    style="border: 2px solid grey; border-radius: 2rem; text-align: initial"
+  >
+    {{ obj.description|safe }}
+  </div>
+</div>
+<div class="container text-center pb-3">
+  <hr style="width: 70%; border-top: 4px solid #1492e6; border-radius: 50rem" />
+  <h2 class="mt-5">About The Instructor</h2>
+  <hr style="width: 110px; border: 1px solid rgba(0, 0, 0, 0.62)" />
+  <div class="p-4" style="text-align: initial">
+    <h2>{{ obj.resource_person }}</h2>
+    {{ obj.resource_person_data|safe }}
+  </div>
+</div>
+</main>
+{% endblock content %}
