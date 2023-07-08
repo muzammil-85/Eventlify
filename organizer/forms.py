@@ -1,41 +1,44 @@
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import date
 
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from .models import organizerRecord
 
-BATCH_START = [('2016', '2016'), ('2017', '2017'), ('2018', '2018'), ('2019', '2019'), ('2020', '2020'),
-               ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025')]
-BATCH_END = [('2020', '2020'), ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025'),
-             ('2026', '2026'), ('2027', '2027'), ('2028', '2028'), ('2029', '2029'), ('2030', '2030')]
-BRANCHES = [('CSE', 'CSE'), ('IT', 'IT'), ('EC', 'EC'), ('ME', 'ME'), ('EN', 'EN'), ('CE', 'CE'), ('MCA', 'MCA'),
-            ('Other', 'Other')]
+ID_TYPE = [('VOTER_ID', 'VOTER_ID'), ('LICENSE', 'LICENSE'), ('PASSPORT', 'PASSPORT'), ('ADHAAR', 'ADHAAR'), ('PAN_CARD', 'PAN_CARD')]
 
 
-class organizerForm(forms.ModelForm):
-    roll_no = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Admission Number'}), required=True, max_length=15)
-    college_name = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'College Name', 'value': 'ABES Engineering College'}),
-        required=True, max_length=200)
-    branch = forms.CharField(
-        label='BRANCHES', widget=forms.Select(choices=BRANCHES, attrs={'class': 'form-control'}), required=True)
-    batch_start = forms.CharField(
-        label='BATCH START', widget=forms.Select(choices=BATCH_START, attrs={'class': 'form-control'}), required=True)
-    batch_end = forms.CharField(
-        label='BATCH END', widget=forms.Select(choices=BATCH_END, attrs={'class': 'form-control'}), required=True)
-    number = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Mobile Number', 'pattern': "[6789][0-9]{9}"}), required=True,
-        max_length=10)
+class organizerForm(forms.ModelForm): 
+    Fname = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'first name'}), required=True, max_length=30)
+    Lname = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+        required=True, max_length=30)
+    Mobile = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Mobile No'}),
+        required=True, max_length=10)
+    Email = forms.EmailField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Email'}),
+        required=True)
+    Dob = forms.DateField(widget=forms.DateInput(
+        attrs={'type': 'date', 'class': 'form-control'}))
+    Profile_pic = forms.FileField(widget=forms.ClearableFileInput(
+        attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
+    Address = description = forms.CharField(widget=CKEditorUploadingWidget())
+    Id_type = forms.EmailField(
+        label='ID TYPE', widget=forms.Select(choices=ID_TYPE, attrs={'class': 'form-control'}), required=True)
+    Id_file = forms.FileField(widget=forms.ClearableFileInput(
+        attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
 
     class Meta:
         model = organizerRecord
-        fields = ['roll_no', 'college_name', 'branch', 'batch_start', 'batch_end', 'number']
+        fields = ['Fname', 'Lname', 'Mobile', 'Email', 'Dob', 'Profile_pic','Address','Id_type','Id_file']
 
-    def clean_roll_no(self):
-        roll_no = None
+    def clean_email(self):
+        Email = None
         try:
-            roll_no = self.cleaned_data['roll_no']
-            organizerRecord.objects.get(roll_no=roll_no.upper())
-            raise forms.ValidationError("Roll Number already taken. Contact to us")
+            Email = self.cleaned_data['Email']
+            organizerRecord.objects.get(Email=Email)
+            raise forms.ValidationError("Email already taken. Try to login")
         except ObjectDoesNotExist:
-            return roll_no.upper()
+            return Email

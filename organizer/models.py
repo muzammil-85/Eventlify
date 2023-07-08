@@ -1,17 +1,22 @@
 from django.contrib.auth.models import User
 from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField
 
-
+ 
 # Create your models here.
 class organizerRecord(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    roll_no = models.CharField(max_length=30)
-    college_name = models.CharField(max_length=200)
-    branch = models.CharField(max_length=10)
-    batch_start = models.CharField(max_length=10)
-    batch_end = models.CharField(max_length=10)
-    number = models.CharField(max_length=10)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    Fname = models.CharField(max_length=30,null=True,blank=True)
+    Lname = models.CharField(max_length=30,null=True,blank=True)
+    Mobile = models.IntegerField(null=True,blank=True)
+    Email = models.EmailField(null=True,blank=True)
+    Dob = models.DateField(null=True,blank=True)
+    Profile_pic = models.FileField(default='')
+    Address = RichTextUploadingField(default='')
+    Id_type = models.CharField(max_length=10,null=True,blank=True)
+    Status = models.CharField(max_length=10,null=True,blank=True)
+    Id_file = models.FileField(default='')
+    
 
     def __str__(self):
         return str(self.user)
