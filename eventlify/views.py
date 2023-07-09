@@ -11,7 +11,7 @@ def home(request):
     except Exception:
         num = 16
     request.session['head_name'] = 'home'
-    event_list = EventRecord.objects.all().order_by('-event_date')[:num]
+    event_list = EventRecord.objects.all().order_by('-event_start_date')[:num]
     return render(request, 'index.html', {'event_list': event_list})
 
 

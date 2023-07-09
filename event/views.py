@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 from registration.models import RegistrationRecord
 from .forms import EventForm
 from .models import EventRecord
-
+from eventlify.settings import BASE_URL
 
 # Create your views here.
 class EventListView(TemplateView):
@@ -16,7 +16,7 @@ class EventListView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         request.session['head_name'] = 'event'
-        event_list = EventRecord.objects.all().order_by('-event_date')
+        event_list = EventRecord.objects.all().order_by('-event_start_date')
         return render(request, self.template_name, {'event_list': event_list})
 
 
@@ -72,7 +72,7 @@ class AddEvent(TemplateView):
                     messages.error(request, 'Invalid Input')
             else:
                 raise PermissionDenied
-            return render(request, self.template_name, {'form': form})
+            return render(request, self.template_name, {'form': form,'base':BASE_URL})
         # except Exception:
         #     messages.error(request, 'Permission Denied')
         #     return redirect('home')

@@ -111,35 +111,107 @@ block.super }}{% endblock %}
     font-weight: lighter;
   }
 </style>
+
+{% if user.is_authenticated %}
 <div class="wrapper-grey padded">
   <div class="container">
+    <h2>public</h2>
+    <hr>
     <div class="row">
-
-    
-    {% for data in event_list %}
-    <div class="col-xs-12 col-sm-4">
+      {% for data in event_list %}
+      {% if data.user.id == request.user.id and data.mode == 'public' %}
+      <div class="col-xs-12 col-sm-4">
       <div
         class="card"
-        style="box-shadow:10px 10px;background: linear-gradient(180deg,rgba(0,0,0,0.0), rgba(0,0,0,0.6)), url('/media/{{ data.event_pic }}');"
+        style="box-shadow:10px 10px;background: linear-gradient(180deg,rgba(0,0,0,0.0), rgba(0,0,0,0.6)), url('/media/{{ data.poster }}');"
       >
         <div class="card-category">
           {% if data.registration_open %}<span class="badge rounded-pill bg-success fs-6">Open</span>{% else %}<span class="badge rounded-pill bg-danger fs-6">Closed</span>{% endif %}
         </div>
         <div class="card-description" style="color: #d7d7d7;">
-          <h2 style="margin-bottom: 1rem;">{{ data.event_name }}</h2>
-          <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_date }}</p>
+          <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
+          <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
           <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
+          <p><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{data.types}} | {{data.category}}</p>
         </div>
-        <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.type}}</span></p>
+        <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.platform }}</span></p>
+        <a
+          class="card-link"
+          href="{% url 'event:event_detail' data.slug %}"
+        ></a>
+      </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+
+    <h2>private</h2>
+    <hr>
+    <div class="row">
+      {% for data in event_list %}
+      {% if data.user.id == request.user.id and data.mode == 'private' %}
+      <div class="col-xs-12 col-sm-4">
+      <div
+        class="card"
+        style="box-shadow:10px 10px;background: linear-gradient(180deg,rgba(0,0,0,0.0), rgba(0,0,0,0.6)), url('/media/{{ data.poster }}');"
+      >
+        <div class="card-category">
+          {% if data.registration_open %}<span class="badge rounded-pill bg-success fs-6">Open</span>{% else %}<span class="badge rounded-pill bg-danger fs-6">Closed</span>{% endif %}
+        </div>
+        <div class="card-description" style="color: #d7d7d7;">
+          <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
+          <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
+          <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
+          <p><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{data.types}} | {{data.category}}</p>
+
+        </div>
+        <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.platform }}</span></p>
+        <a
+          class="card-link"
+          href="{% url 'event:event_detail' data.slug %}"
+        ></a>
+      </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div>
+{%else%}
+<div class="wrapper-grey padded">
+  <div class="container">
+    <h2>public</h2>
+    <hr>
+    <div class="row">
+      {% for data in event_list %}
+      {% if data.mode == 'public' %}
+      <div class="col-xs-12 col-sm-4">
+      <div
+        class="card"
+        style="box-shadow:10px 10px;background: linear-gradient(180deg,rgba(0,0,0,0.0), rgba(0,0,0,0.6)), url('/media/{{ data.poster }}');"
+      >
+        <div class="card-category">
+          {% if data.registration_open %}<span class="badge rounded-pill bg-success fs-6">Open</span>{% else %}<span class="badge rounded-pill bg-danger fs-6">Closed</span>{% endif %}
+        </div>
+        <div class="card-description" style="color: #d7d7d7;">
+          <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
+          <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
+          <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
+          <p><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{data.types}} | {{data.category}}</p>
+
+        </div>
+        <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.platform }}</span></p>
         <a
           class="card-link"
           href="{% url 'event:event_detail' data.slug %}"
         ></a>
       </div>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
   </div>
 </div>
+{%endif%}
 
 {% endblock %}

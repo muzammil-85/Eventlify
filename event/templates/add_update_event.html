@@ -6,54 +6,71 @@
             <h3>Event Information*</h3>
             <div class="form-row px-md-5">
                 {{ form.media }}
-                <div class="pb-4 col-md-4"><label>Select Event:</label>{{ form.type }}{{ form.type.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Centre of Excellence:</label>{{ form.c_o_e }}{{ form.c_o_e.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Fees:</label>{{ form.fees }}{{ form.fees.errors }}</div>
-                <div class="pb-4 col-md-8"><label>Event name</label>{{ form.event_name }}{{ form.event_name.errors }}
+                
+                
+                
+                <div class="pb-4 col-md-8"><label>Event Title</label>{{ form.event_title }}{{ form.event_title.errors }}</div>
+                
+                <div class="pb-4 col-md-8"><label>Event Subtitle</label>{{ form.event_subtitle }}{{ form.event_subtitle.errors }}</div>
+                
+                <div class="pb-4 col-md-4"><label>Fees</label>{{ form.fees }}{{ form.fees.errors }}</div>
+                
+                <div class="pb-4 col-md-12"><label>Description</label><br>{{ form.description }}{{ form.description.errors }}</div>
+                
+                <div class="pb-4 col-md-4"><label>Type</label>{{ form.types }}{{ form.types.errors }}</div>
+
+                <div class="pb-4 col-md-4">
+                    <label>Event start date</label>{{ form.event_start_date }}{{ form.event_start_date.errors }}
                 </div>
-                <div class="col-md-4"><label>Duration</label>
-                    <div class="row">
-                        <div class="pb-4 col-md-7">{{ form.duration_number }}
-                            <span style="color:red;">{{ form.duration_number.errors }}</span></div>
-                        <div class="pb-4 col-md-5">{{ form.duration_string }}{{ form.duration_string.errors }}</div>
-                    </div>
+
+                <div class="pb-4 col-md-4">
+                    <label>Event end date</label>{{ form.event_end_date }}{{ form.event_end_date.errors }}
                 </div>
+
+                <div class="pb-4 col-md-4">
+                    <label>Event start time</label>{{ form.event_start_time }}{{ form.event_start_time.errors }}
+                </div>
+                
+                <div class="pb-4 col-md-4">
+                    <label>Event end time</label>{{ form.event_end_time }}{{ form.event_end_time.errors }}
+                </div>
+                <div class="pb-4 col-md-4"><label>Mode of event</label>{{ form.mode }}{{ form.mode.errors }}</div>
+                
+                <div class="pb-4 col-md-4"><label>Platform of event</label>{{ form.platform }}{{ form.platform.errors }}</div>
+                
+                <div class="pb-4 col-md-8"><label>Venue</label>{{ form.venue }}{{ form.venue.errors }}</div>
+
+                
+
+
                 <div class="pb-4 col-md-4">
                     <label>Registration start</label>{{ form.registration_start }}{{ form.registration_start.errors }}
                 </div>
+
                 <div class="pb-4 col-md-4">
                     <label>Registration end</label>{{ form.registration_end }}{{ form.registration_end.errors }}
                 </div>
+
+
                 <div class="pb-4 col-md-4">
-                    <label>Event Start</label>{{ form.event_date }}{{ form.event_date.errors }}
+                    <label>No of tickets</label>{{ form.no_of_tickets }}{{ form.no_of_tickets.errors }}
                 </div>
-                <div class="pb-4 col-md-12">Eligible branches{% for radio in form.eligible_branches %}
-                    <div class="pl-sm-4 pl-2 form-check form-check-inline">{{ radio }}</div>
-                {% endfor %}{{ form.eligible_branches.errors }}</div>
-                <div class="pb-4 col-md-12">Eligible Year{% for radio in form.eligible_year %}
-                    <div class="pl-sm-4 pl-2 form-check form-check-inline">{{ radio }}</div>
-                {% endfor %}{{ form.eligible_year.errors }}</div>
-                <div class="pb-4 col-md-12"><label>Outside organizers allowed</label>
-                    {% for radio in form.outside_organizer %}
-                        <div class="pl-sm-4 pl-2 form-check form-check-inline">{{ radio }}</div>
-                    {% endfor %}{{ form.outside_organizer.errors }}</div>
-                <div class="pb-4 col-md-8"><label>Venue:</label>{{ form.venue }}{{ form.venue.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Event logo: (100X100 svg file)</label>{{ form.event_pic }}{{ form.event_pic.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Learning Outcome 1:</label>{{ form.learning_outcome_1 }}{{ form.learning_outcome_1.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Learning Outcome 2:</label>{{ form.learning_outcome_2 }}{{ form.learning_outcome_2.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Learning Outcome 3:</label>{{ form.learning_outcome_3 }}{{ form.learning_outcome_3.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Learning Outcome 4:</label>{{ form.learning_outcome_4 }}{{ form.learning_outcome_4.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Learning Outcome 5:</label>{{ form.learning_outcome_5 }}{{ form.learning_outcome_5.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Learning Outcome 6:</label>{{ form.learning_outcome_6 }}{{ form.learning_outcome_6.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Pre-Requisites 1:</label>{{ form.pre_requisites_1 }}{{ form.pre_requisites_1.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Pre-Requisites 2:</label>{{ form.pre_requisites_2 }}{{ form.pre_requisites_2.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Pre-Requisites 3:</label>{{ form.pre_requisites_3 }}{{ form.pre_requisites_3.errors }}</div>
-                <div class="pb-4 col-md-12"><label>Description</label>{{ form.description }}{{ form.description.errors }}</div>
-                <div class="pb-4 col-md-7"><label>Resource person:</label>{{ form.resource_person }}{{ form.resource_person.errors }}</div>
-                <div class="pb-4 col-md-5">
-                    <label>Resource person Image: (500X500 image file)</label>{{ form.resource_person_pic }}{{ form.resource_person_pic.errors }}</div>
-                <div class="pb-4 col-md-12"><label>Resource person data:</label>{{ form.resource_person_data }}{{ form.resource_person_data.errors }}</div>
-{#            {{ form.as_p }}#}
+
+
+                <div class="pb-4 col-md-4"><label>Category</label>{{ form.category }}{{ form.category.errors }}</div>
+
+                <div class="pb-4 col-md-4"><label>Subcategory</label>{{ form.subcategory }}{{ form.subcategory.errors }}</div>
+
+                <div class="pb-4 col-md-4"><label>Website Link</label>{{ form.website }}{{ form.website.errors }}</div>
+                <div class="pb-4 col-md-4"><label>Facebook Link</label>{{ form.facebook }}{{ form.facebook.errors }}</div>
+                <div class="pb-4 col-md-4"><label>Instagram Link</label>{{ form.instagram }}{{ form.instagram.errors }}</div>
+                <div class="pb-4 col-md-4"><label>Youtube Link</label>{{ form.youtube }}{{ form.youtube.errors }}</div>
+
+                <div class="pb-4 col-md-4"><label>Event Banner: (100X100 svg file)</label>{{ form.banner }}{{ form.banner.errors }}</div>
+                <div class="pb-4 col-md-4"><label>Event Poster: (100X100 svg file)</label>{{ form.poster }}{{ form.poster.errors }}</div>
+                <div class="pb-4 col-md-4"><label>Event Logo: (100X100 svg file)</label>{{ form.logo }}{{ form.logo.errors }}</div>
+                <div class="pb-4 col-md-4"><label>Event Sponsor_logo: (100X100 svg file)</label>{{ form.sponsor_logo }}{{ form.sponsor_logo.errors }}</div>
+                
             </div>
             <div class="px-md-5 pb-5 btn-toolbar">
                 <button type="submit" class="px-5 m-2 btn btn-outline-primary">Submit</button>

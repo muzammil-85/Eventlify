@@ -26,6 +26,8 @@ DEBUG = bool(os.environ.get('DEBUG'))
 
 ALLOWED_HOSTS = ['*']
 
+BASE_URL = os.environ.get('BASE_URL')
+
 # Application definition
 
 INSTALLED_APPS = [
