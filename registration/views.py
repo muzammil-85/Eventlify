@@ -20,57 +20,46 @@ from .forms import TransactionForm
 from .models import RegistrationRecord
 
 
-# Create your views here.
-# noinspection PyBroadException
+from django.shortcuts import render
+from .forms import DynamicForm
+
+# def dynamic_form(request):
+#     if request.method == 'POST':
+#         form = DynamicForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             # Process the form data here
+#             # For example: form.cleaned_data contains the submitted data
+#             print("setted")
+#     else:
+#         form = DynamicForm()
+
+#     return render(request, 'dynamic_form.html', {'form': form})
+
 class RegisterEvent(TemplateView):
+    template_name = 'dynamic_form.html'
 
     def get(self, request, *args, **kwargs):
         try:
-            if not request.user.is_staff and not request.user.is_superuser:
-                obj = EventRecord.objects.get(slug=kwargs['slug'])
-                t = date.today()
-                if obj.registration_open and (obj.registration_start <= t) and (t <= obj.registration_end):
-                    try:
-                        organizer = organizerRecord.objects.get(user=request.user)
-                    except ObjectDoesNotExist:
-                        messages.info(request, 'Fill your personal information before registration')
-                        return redirect('home')
-                    try:
-                        RegistrationRecord.objects.get(organizer=organizer, event=obj)
-                        msg = str('Already Register in ' + obj.event_name)
-                        messages.warning(request, msg)
-                    except ObjectDoesNotExist:
-                        obj.registered_organizer += 1
-                        RegistrationRecord.objects.create(organizer=organizer, user=request.user, event=obj,
-                                                          c_o_e=obj.c_o_e, type=obj.type, balance=obj.fees)
-                        obj.save(update_fields=['registered_organizer'])
-                        msg = str('Successfully Register for ' + obj.event_name)
-                        messages.success(request, msg)
-                        current_site = get_current_site(request)
-                        mail_subject = 'Welcome to eventlify Course: ' + obj.event_name
-                        message = render_to_string('registration_email.txt', {
-                            'user': request.user,
-                            'domain': current_site.domain,
-                            'event': obj,
-                            'email': settings.EMAIL_HOST_USER,
-                        })
-                        email = EmailMessage(mail_subject, message, to=[request.user.email])
-                        email.send()
-                        return redirect("account:consolidated_view_all")
-                else:
-                    messages.info(request, 'Registration Closed/Does not Start')
-            else:
-                raise PermissionDenied
-            return redirect('event:event_detail', kwargs['slug'])
-        except ObjectDoesNotExist:
-            messages.error(request, 'Record Not Found')
-            return redirect('home')
-        except PermissionDenied:
-            messages.warning(request, 'You have not Permission to Register')
+            event = EventRecord.objects.get(slug=kwargs['slug'])
+            return render(request, self.template_name, {'obj': event})
         except Exception:
-            messages.error(request, 'Try After Some Time')
+            messages.error(request, 'You Does not Permission')
             return redirect('home')
 
+
+# class RegisterEvent(TemplateView):
+#     def get(self, request, *args, **kwargs):
+#         try:
+#             # Your existing code...
+
+#             return redirect('dynamic_form')
+            
+#         except ObjectDoesNotExist:
+#             messages.error(request, 'Record not found')
+#         except Exception:
+#             messages.error(request, 'Try after some time')
+        
+#         return redirect('home')
 
 # noinspection PyBroadException
 class RegistrationDetail(TemplateView):

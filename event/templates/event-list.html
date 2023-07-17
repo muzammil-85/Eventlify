@@ -1,5 +1,4 @@
-{% extends "base.html" %}{% load staticfiles %}{% block head_title %}Home | {{
-block.super }}{% endblock %}
+{% extends "base.html" %}{% load staticfiles %}{% block head_title %}Events{% endblock %}
 <main>{% block content %}</main>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
 
@@ -76,15 +75,15 @@ block.super }}{% endblock %}
     left: 10px;
     font-size: 20px;
   }
-  .card-description {
+  .card-about {
     position: absolute;
     bottom: 1rem;
     left: 10px;
   }
-  .card-description h2 {
+  .card-about h2 {
     font-size: 20px;
   }
-  .card-description p {
+  .card-about p {
     font-size: 15px;
   }
   .card-link {
@@ -115,11 +114,11 @@ block.super }}{% endblock %}
 {% if user.is_authenticated %}
 <div class="wrapper-grey padded">
   <div class="container">
-    <h2>public</h2>
+    <h2>Public</h2>
     <hr>
     <div class="row">
       {% for data in event_list %}
-      {% if data.user.id == request.user.id and data.mode == 'public' %}
+      {% if data.visibility == 'public' %}
       <div class="col-xs-12 col-sm-4">
       <div
         class="card"
@@ -128,7 +127,7 @@ block.super }}{% endblock %}
         <div class="card-category">
           {% if data.registration_open %}<span class="badge rounded-pill bg-success fs-6">Open</span>{% else %}<span class="badge rounded-pill bg-danger fs-6">Closed</span>{% endif %}
         </div>
-        <div class="card-description" style="color: #d7d7d7;">
+        <div class="card-about" style="color: #d7d7d7;">
           <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
           <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
           <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
@@ -145,11 +144,11 @@ block.super }}{% endblock %}
     {% endfor %}
     </div>
 
-    <h2>private</h2>
+    <h2>Your Events</h2>
     <hr>
     <div class="row">
       {% for data in event_list %}
-      {% if data.user.id == request.user.id and data.mode == 'private' %}
+      {% if data.user.id == request.user.id %}
       <div class="col-xs-12 col-sm-4">
       <div
         class="card"
@@ -158,7 +157,7 @@ block.super }}{% endblock %}
         <div class="card-category">
           {% if data.registration_open %}<span class="badge rounded-pill bg-success fs-6">Open</span>{% else %}<span class="badge rounded-pill bg-danger fs-6">Closed</span>{% endif %}
         </div>
-        <div class="card-description" style="color: #d7d7d7;">
+        <div class="card-about" style="color: #d7d7d7;">
           <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
           <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
           <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
@@ -184,7 +183,7 @@ block.super }}{% endblock %}
     <hr>
     <div class="row">
       {% for data in event_list %}
-      {% if data.mode == 'public' %}
+      {% if data.visibility == 'public' %}
       <div class="col-xs-12 col-sm-4">
       <div
         class="card"
@@ -193,10 +192,10 @@ block.super }}{% endblock %}
         <div class="card-category">
           {% if data.registration_open %}<span class="badge rounded-pill bg-success fs-6">Open</span>{% else %}<span class="badge rounded-pill bg-danger fs-6">Closed</span>{% endif %}
         </div>
-        <div class="card-description" style="color: #d7d7d7;">
+        <div class="card-about" style="color: #d7d7d7;">
           <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
           <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
-          <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
+          <div style="display: inline;"><p><i class="fa fa-location-pin" aria-hidden="true"></i>{{data.venue }}</p></div>
           <p><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{data.types}} | {{data.category}}</p>
 
         </div>

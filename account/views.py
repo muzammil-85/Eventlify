@@ -31,7 +31,7 @@ def is_block(request, user):
 
 def logout(request):
     auth.logout(request)
-    return redirect('home')
+    return redirect('event:event_list')
 
 
 
@@ -87,7 +87,7 @@ class Login(TemplateView):
                 email.send()
 
                 messages.success(request, 'Password reset link has been sent to your registered E-mail Address')
-                return redirect('home')
+                return redirect('event:event_list')
             else:
                 messages.warning(request, 'Invalid Input. Please try again')
 
@@ -95,7 +95,7 @@ class Login(TemplateView):
             messages.error(request, 'Invalid Inputs. Please try again')
         except PermissionDenied as e:
             messages.error(request, e)
-            return redirect('home')
+            return redirect('event:event_list')
         except Exception as e:
             messages.error(request, (str(e) + '. Please Contact Us'))
 
@@ -161,7 +161,7 @@ class Signup(TemplateView):
 
         except PermissionDenied as e:
             messages.error(request, e)
-            return redirect('home')
+            return redirect('event:event_list')
         except Exception as e:
             messages.error(request, (str(e) + '. Please Contact Us'))
             return redirect("account:signup")
@@ -186,7 +186,7 @@ class Activate(TemplateView):
 
         except PermissionDenied as e:
             messages.error(request, e)
-            return redirect('home')
+            return redirect('event:event_list')
         except Exception as e:
             messages.error(request, (str(e) + '. Please Contact Us'))
             return redirect("account:signup")
@@ -208,7 +208,7 @@ class Activate(TemplateView):
                     user.save()
                     auth.login(request, user)
                     messages.success(request, 'Thank you for Registration')
-                    return redirect("home")
+                    return redirect("event:event_list")
                 else:
                     messages.warning(request, 'Invalid Input')
                     return render(request, self.template_name, {'user': user, 'form': form})
@@ -217,7 +217,7 @@ class Activate(TemplateView):
 
         except PermissionDenied as e:
             messages.error(request, e)
-            return redirect('home')
+            return redirect('event:event_list')
         except Exception as e:
             messages.error(request, (str(e) + '. Please Contact Us'))
             return redirect("account:signup")
@@ -242,10 +242,10 @@ class ForgetPassword(TemplateView):
 
         except PermissionDenied as e:
             messages.error(request, e)
-            return redirect('home')
+            return redirect('event:event_list')
         except Exception as e:
             messages.error(request, (str(e) + '. Please Contact Us'))
-            return redirect("home")
+            return redirect("event:event_list")
 
     def post(self, request, **kwargs):
         try:
@@ -263,7 +263,7 @@ class ForgetPassword(TemplateView):
                     user.save()
                     messages.success(request, 'Password Successfully Updated')
                     auth.login(request, user)
-                    return redirect('home')
+                    return redirect('event:event_list')
                 messages.error(request, 'Invalid Password')
                 return render(request, self.template_name, {'form': form})
             else:
@@ -271,10 +271,10 @@ class ForgetPassword(TemplateView):
 
         except PermissionDenied as e:
             messages.error(request, e)
-            return redirect('home')
+            return redirect('event:event_list')
         except Exception as e:
             messages.error(request, (str(e) + '. Please Contact Us'))
-            return redirect("home")
+            return redirect("event:event_list")
 
 
 # noinspection PyBroadException
@@ -289,7 +289,7 @@ class ResetPassword(TemplateView):
                 return render(request, self.template_name, {'form': form})
         except Exception:
             messages.error(request, 'User not Found')
-        return redirect('home')
+        return redirect('event:event_list')
 
     def post(self, request):
         try:
@@ -302,12 +302,12 @@ class ResetPassword(TemplateView):
                     user.save()
                     messages.success(request, 'Password Updated')
                     auth.login(request, user)
-                    return redirect('home')
+                    return redirect('event:event_list')
                 messages.error(request, 'Password Does not Match')
                 return render(request, self.template_name, {'form': form})
         except Exception:
             messages.error(request, 'Invalid Link')
-        return redirect('home')
+        return redirect('event:event_list')
 
 class ConsolidatedView(TemplateView):
     template_name = 'consolidated_view.html'
@@ -333,10 +333,10 @@ class ConsolidatedView(TemplateView):
 
         except ObjectDoesNotExist:
             messages.error(request, 'Record Not Found')
-            return redirect('home')
+            return redirect('event:event_list')
         # except Exception as e:
         #     messages.error(request, (str(e) + '. Please Contact Us'))
-        #     return redirect("home")
+        #     return redirect("event:event_list")
 
 
 # noinspection PyBroadException

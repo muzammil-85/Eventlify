@@ -30,7 +30,7 @@ class RegistrationRecord(models.Model):
     amount = models.FloatField(default=0)
     balance = models.FloatField(default=0)
     type = models.CharField(max_length=50)
-    c_o_e = models.CharField(max_length=75)
+    category = models.CharField(max_length=75)
     status = models.BooleanField(default=True)
     cancel = models.BooleanField(default=False)
     transaction_id = models.ManyToManyField(TransactionRecord)
@@ -47,3 +47,25 @@ class RegistrationRecord(models.Model):
 
     def __str__(self):
         return self.registration_id
+
+class Question(models.Model):
+    TEXT = 'text'
+    NUMBER = 'number'
+    MULTIPLE_CHOICE = 'multiple_choice'
+    TEXTAREA = 'textarea'
+    IMAGE = 'image'
+
+    QUESTION_TYPE_CHOICES = [
+        (TEXT, 'Text'),
+        (NUMBER, 'Number'),
+        (MULTIPLE_CHOICE, 'Multiple Choice'),
+        (TEXTAREA, 'Text Area'),
+        (IMAGE, 'Image'),
+    ]
+
+    text = models.CharField(max_length=255)
+    question_type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES)
+
+class MultipleChoiceOption(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    text = models.CharField(max_length=255)

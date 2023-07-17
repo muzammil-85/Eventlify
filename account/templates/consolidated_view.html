@@ -15,21 +15,22 @@
             <a href="{% url 'account:consolidated_c_o_e' c_o_e='TST' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Testing">TST</a>
             <a href="{% url 'account:consolidated_c_o_e' c_o_e='NI' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="ABES-NI Innovation Centre">NI</a>
         </div>{% endif %}
-        <div class="card-deck my-4">{% if user.is_staff or user.is_superuser %}{% for event in event_list %}
-            <div class="card mb-4 shadow-sm">
+        <div class="card-deck my-4"  >{% if user.is_staff or user.is_superuser %}{% for event in event_list %}
+            <div class="card mb-4 shadow-sm" style="height: 25rem;">
                 <div class="card-header btn-toolbar justify-content-between">
-                    <span class="font-weight-normal text-capitalize">{{ event.type }}</span>
+                    <span class="font-weight-normal text-capitalize">{{ event.types }}</span> 
                     {% if now <= event.registration_end %}<span class="text-success">Active</span>
                     {% else %}<span class="text-danger">Not Active</span>{% endif %}
                 </div>
                 <div class="card-body">
                     <p>Event Name:
-                        <a href="{% url 'event:event_detail' event.slug %}">{{ event.event_name }}</a><br> Event Code:
-                        <a href="{% url 'event:event_detail' event.slug %}">{{ event }}</a><br> Event Date:
-                        <span class="text-danger">{{ event.event_date|date:"F d, Y" }}</span><br>Trainer:
+                        <a href="{% url 'event:event_detail' event.slug %}">{{ event.event_title }}</a><br> 
+                        Event Code:
+                        <a href="{% url 'event:event_detail' event.slug %}">{{ event.id }}</a><br> Event Date:
+                        <span class="text-danger">{{ event.event_start_date|date:"F d, Y" }}</span><br>organizer:
                         {% if user.is_superuser %}<a href="{% url 'account:consolidated_username' event.user %}">
-                        {% endif %}{{ event.user.first_name }} {{ event.user.last_name }}</a></p>
-                    <p>No. of organizer Registered {{ event.registered_organizer }}</p>
+                        {% endif %}{{ event.user.Fname }} {{ event.user.Lname }}</a></p>
+                    <p>No. of people Registered : {{ event.event_booked }}</p>
                     <div class="pt-2 btn-toolbar justify-content-between">
                         <a href="{% url 'registration:register_organizer_list' event.slug %}">organizer List</a>
                         <a href="{% url 'registration:print_organizer_list' event.slug %}">Registration Report</a>

@@ -24,6 +24,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DEBUG'))
 
+
+import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+
+ALLOWED_HOSTS = [s.getsockname()[0], '127.0.0.1', 'localhost']
+s.close()
+
+
 ALLOWED_HOSTS = ['*']
 
 BASE_URL = os.environ.get('BASE_URL')

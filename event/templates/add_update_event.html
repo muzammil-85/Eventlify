@@ -15,7 +15,7 @@
                 
                 <div class="pb-4 col-md-4"><label>Fees</label>{{ form.fees }}{{ form.fees.errors }}</div>
                 
-                <div class="pb-4 col-md-12"><label>Description</label><br>{{ form.description }}{{ form.description.errors }}</div>
+                <div class="pb-4 col-md-12"><label>about</label><br>{{ form.about }}{{ form.about.errors }}</div>
                 
                 <div class="pb-4 col-md-4"><label>Type</label>{{ form.types }}{{ form.types.errors }}</div>
 
@@ -34,11 +34,11 @@
                 <div class="pb-4 col-md-4">
                     <label>Event end time</label>{{ form.event_end_time }}{{ form.event_end_time.errors }}
                 </div>
-                <div class="pb-4 col-md-4"><label>Mode of event</label>{{ form.mode }}{{ form.mode.errors }}</div>
+                <div class="pb-4 col-md-4"><label>Mode of event</label>{{ form.visibility }}{{ form.visibility.errors }}</div>
                 
                 <div class="pb-4 col-md-4"><label>Platform of event</label>{{ form.platform }}{{ form.platform.errors }}</div>
                 
-                <div class="pb-4 col-md-8"><label>Venue</label>{{ form.venue }}{{ form.venue.errors }}</div>
+                <div class="pb-4 col-md-8"><label>Venue</label>{{ form.venue|safe }}{{ form.venue.errors }}</div>
 
                 
 
@@ -66,10 +66,7 @@
                 <div class="pb-4 col-md-4"><label>Instagram Link</label>{{ form.instagram }}{{ form.instagram.errors }}</div>
                 <div class="pb-4 col-md-4"><label>Youtube Link</label>{{ form.youtube }}{{ form.youtube.errors }}</div>
 
-                <div class="pb-4 col-md-4"><label>Event Banner: (100X100 svg file)</label>{{ form.banner }}{{ form.banner.errors }}</div>
                 <div class="pb-4 col-md-4"><label>Event Poster: (100X100 svg file)</label>{{ form.poster }}{{ form.poster.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Event Logo: (100X100 svg file)</label>{{ form.logo }}{{ form.logo.errors }}</div>
-                <div class="pb-4 col-md-4"><label>Event Sponsor_logo: (100X100 svg file)</label>{{ form.sponsor_logo }}{{ form.sponsor_logo.errors }}</div>
                 
             </div>
             <div class="px-md-5 pb-5 btn-toolbar">

@@ -29,6 +29,7 @@ class EventDetail(TemplateView):
             owner = False
             registered = True
             obj = EventRecord.objects.get(slug=kwargs['slug'])
+            
             if obj.user == request.user or request.user.is_superuser:
                 owner = True
             else:
@@ -40,9 +41,30 @@ class EventDetail(TemplateView):
                           {'obj': obj, 'owner': owner, 'registered': registered, 'now': date.today()})
         except ObjectDoesNotExist:
             messages.error(request, 'Event Not found')
-            return redirect('home')
+            return redirect('event:event_list')
 
+class EventDetailForm(TemplateView):
+    template_name = 'event_client_form.html'
 
+    def get(self, request, *args, **kwargs):
+       return render(request, self.template_name)
+       
+
+    # def post(self, request):
+    #     if True:
+    #         if request.user.is_staff:
+    #             form = EventForm(request.POST, request.FILES)
+    #             if form.is_valid():
+    #                 temp = form.save(commit=False)
+    #                 temp.user = request.user
+    #                 form.save()
+    #                 messages.success(request, 'Event Added')
+    #                 return redirect('event:event_detail', slug=temp.slug)
+    #             else:
+    #                 messages.error(request, 'Invalid Input')
+    #         else:
+    #             raise PermissionDenied
+    #         return render(request, self.template_name, {'form': form,'base':BASE_URL})
 # noinspection PyBroadException
 class AddEvent(TemplateView):
     template_name = 'add_update_event.html'
@@ -56,7 +78,7 @@ class AddEvent(TemplateView):
             return render(request, self.template_name, {'form': form})
         except PermissionDenied:
             messages.error(request, 'Permission Denied')
-            return redirect('home')
+            return redirect('event:event_list')
 
     def post(self, request):
         if True:
@@ -67,7 +89,7 @@ class AddEvent(TemplateView):
                     temp.user = request.user
                     form.save()
                     messages.success(request, 'Event Added')
-                    return redirect('event:event_detail', slug=temp.slug)
+                    return redirect('event:event_form')
                 else:
                     messages.error(request, 'Invalid Input')
             else:
@@ -75,7 +97,7 @@ class AddEvent(TemplateView):
             return render(request, self.template_name, {'form': form,'base':BASE_URL})
         # except Exception:
         #     messages.error(request, 'Permission Denied')
-        #     return redirect('home')
+        #     return redirect('event:event_list')
 
 
 # noinspection PyBroadException
@@ -95,7 +117,7 @@ class UpdateEvent(TemplateView):
             return render(request, self.template_name, {'form': form})
         except Exception:
             messages.error(request, 'Permission Denied')
-            return redirect('home')
+            return redirect('event:event_list')
 
     def post(self, request, **kwargs):
         try:
@@ -121,7 +143,7 @@ class UpdateEvent(TemplateView):
                 raise PermissionDenied
         except Exception:
             messages.error(request, 'Permission Denied')
-            return redirect('home')
+            return redirect('event:event_list')
 
 
 class DeleteEvent(TemplateView):
@@ -138,7 +160,7 @@ class DeleteEvent(TemplateView):
                 raise PermissionDenied('Permission Denied')
         except ObjectDoesNotExist:
             messages.error(request, 'Event Not found')
-            return redirect('home')
+            return redirect('event:event_list')
         except PermissionDenied as msg:
             messages.warning(request, msg)
             return redirect('account:consolidated_view_all')

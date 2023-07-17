@@ -191,14 +191,9 @@ h1 {
 <div class="bg-blue pt-4" style="margin-top: -32px">
   <div class="container pt-md-4 text-md-left text-center">
     <div class="d-flex flex-md-row flex-column">
-      <img
-        src="/media/{{ obj.event_pic }}"
-        alt="logo"
-        class="mb-3"
-        style="height: 100px; margin: auto; margin-top: 0"
-      />
+      
       <div class="flex-md-grow-1 text-white px-3 mb-3">
-        <h1 class="mb-3">{{ obj.event_name }}</h1>
+        <h1 class="mb-3">{{ obj.event_title }}</h1>
         {% if owner %}
         <a
           class="btn btn-custom mb-4"
@@ -218,7 +213,7 @@ h1 {
           class="btn btn-custom mb-4"
           style="border: 2px solid #ffffff; padding: 0.4rem 4rem"
           onclick='return confirm("Are you sure to register in {{ obj.event_name }}")'
-          href="{% url 'registration:register_event' obj %}"
+          href="{% url 'registration:register_event' obj.slug %}"
           >Register Now</a
         >{% else %}
         <button
@@ -250,7 +245,7 @@ h1 {
             Outside of ABES Engineering College organizer 
             {% if obj.outside_organizer == 1 %}Allowed{% else %}Not Allowed{% endif %}
           </li>
-          <li class="mb-2">Venue: {{ obj.venue }}</li>
+          <li class="mb-2">Venue: {{ obj.venue | safe }}</li>
         </ul>
         <p>Duration: {{ obj.duration_number }} {{ obj.duration_string }}</p>
       </div>
@@ -281,114 +276,6 @@ h1 {
   </div>
 </div>
 
-<section class="container">
-    <h1>Events</h1>
-      <div class="row">
-        <article class="card fl-left">
-          <section class="date">
-            <time datetime="23th feb">
-              <span>23</span><span>feb</span>
-            </time>
-          </section>
-          <section class="card-cont">
-            <small>dj khaled</small>
-            <h3>live in sydney</h3>
-            <div class="even-date">
-             <i class="fa fa-calendar"></i>
-             <time>
-               <span>wednesday 28 december 2014</span>
-               <span>08:55pm to 12:00 am</span>
-             </time>
-            </div>
-            <div class="even-info">
-              <i class="fa fa-map-marker"></i>
-              <p>
-                nexen square for people australia, sydney
-              </p>
-            </div>
-            <a class="btn btn-success" href="#">tickets</a>
-          </section>
-        </article>
-        <article class="card fl-left">
-          <section class="date">
-            <time datetime="23th feb">
-              <span>23</span><span>feb</span>
-            </time>
-          </section>
-          <section class="card-cont">
-            <small>dj khaled</small>
-            <h3>corner obsest program</h3>
-            <div class="even-date">
-             <i class="fa fa-calendar"></i>
-             <time>
-               <span>wednesday 28 december 2014</span>
-               <span>08:55pm to 12:00 am</span>
-             </time>
-            </div>
-            <div class="even-info">
-              <i class="fa fa-map-marker"></i>
-              <p>
-                nexen square for people australia, sydney
-              </p>
-            </div>
-            <a class="btn btn-success disabled" href="#">tickets</a>
-
-          </section>
-        </article>
-      </div>
-      <div class="row">
-        <article class="card fl-left">
-          <section class="date">
-            <time datetime="23th feb">
-              <span>23</span><span>feb</span>
-            </time>
-          </section>
-          <section class="card-cont">
-            <small>dj khaled</small>
-            <h3>music kaboom festivel</h3>
-            <div class="even-date">
-             <i class="fa fa-calendar"></i>
-             <time>
-               <span>wednesday 28 december 2014</span>
-               <span>08:55pm to 12:00 am</span>
-             </time>
-            </div>
-            <div class="even-info">
-              <i class="fa fa-map-marker"></i>
-              <p>
-                nexen square for people australia, sydney
-              </p>
-            </div>
-            <a href="#">booked</a>
-          </section>
-        </article>
-        <article class="card fl-left">
-          <section class="date">
-            <time datetime="23th feb">
-              <span>23</span><span>feb</span>
-            </time>
-          </section>
-          <section class="card-cont">
-            <small>dj khaled</small>
-            <h3>hello dubai festivel</h3>
-            <div class="even-date">
-             <i class="fa fa-calendar"></i>
-             <time>
-               <span>wednesday 28 december 2014</span>
-               <span>08:55pm to 12:00 am</span>
-             </time>
-            </div>
-            <div class="even-info">
-              <i class="fa fa-map-marker"></i>
-              <p>
-                nexen square for people australia, sydney
-              </p>
-            </div>
-            <a href="#">cancel</a>
-          </section>
-        </article>
-      </div>
-    </section>
 
 <div class="container mt-5 p-4">
   <div class="d-flex justify-content-md-between flex-md-row flex-column">
@@ -440,7 +327,7 @@ h1 {
     class="p-4 p-md-5 mt-5"
     style="border: 2px solid grey; border-radius: 2rem; text-align: initial"
   >
-    {{ obj.description|safe }}
+    {{ obj.about|safe }}
   </div>
 </div>
 <div class="container text-center pb-3">

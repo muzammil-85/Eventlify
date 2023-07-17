@@ -26,7 +26,7 @@ class EventForm(forms.ModelForm):
     fees = forms.FloatField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Fees'}), min_value=0, max_value=10000, required=True)
     
-    description = forms.CharField(widget=CKEditorUploadingWidget())
+    about = forms.CharField(widget=CKEditorUploadingWidget())
     
     event_start_date = forms.DateField(widget=forms.DateInput(
         attrs={'type': 'date', 'class': 'form-control'}))
@@ -47,7 +47,8 @@ class EventForm(forms.ModelForm):
         attrs={'class': 'form-control', 'placeholder': 'Venue'}), required=True, max_length=50)
     
     
-    mode = forms.CharField(widget=forms.Select(
+    
+    visibility = forms.CharField(widget=forms.Select(
         choices=MODE, attrs={'class': 'form-control'}), required=True)
     
     registration_start = forms.DateField(widget=forms.DateInput(
@@ -77,27 +78,20 @@ class EventForm(forms.ModelForm):
     youtube = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'youtube link'}), required=False, max_length=100)
     
-    banner = forms.FileField(widget=forms.ClearableFileInput(
-        attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
     
     poster = forms.FileField(widget=forms.ClearableFileInput(
         attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
     
-    logo = forms.FileField(widget=forms.ClearableFileInput(
-        attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
     
-    sponsor_logo = forms.FileField(widget=forms.ClearableFileInput(
-        attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
     
     
 
     class Meta:
         model = EventRecord
-        fields = ['event_title', 'event_subtitle', 'fees', 'description', 'event_start_date', 'event_end_date',
-                  'event_start_time', 'event_end_time', 'venue', 'mode', 'registration_start', 'registration_end', 'no_of_tickets',
+        fields = ['event_title', 'event_subtitle', 'fees', 'about', 'event_start_date', 'event_end_date',
+                  'event_start_time', 'event_end_time', 'venue', 'visibility', 'registration_start', 'registration_end', 'no_of_tickets',
                   'category', 'subcategory', 'website', 'facebook', 'instagram',
-                  'youtube', 'banner', 'poster', 'logo','platform','types',
-                  'sponsor_logo']
+                  'youtube', 'poster', 'platform','types'] 
 
     def clean_registration_start(self):
         try:

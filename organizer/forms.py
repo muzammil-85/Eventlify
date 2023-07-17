@@ -24,7 +24,7 @@ class organizerForm(forms.ModelForm):
         attrs={'type': 'date', 'class': 'form-control'}))
     Profile_pic = forms.FileField(widget=forms.ClearableFileInput(
         attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
-    Address = description = forms.CharField(widget=CKEditorUploadingWidget())
+    Address = forms.CharField(widget=CKEditorUploadingWidget())
     Id_type = forms.EmailField(
         label='ID TYPE', widget=forms.Select(choices=ID_TYPE, attrs={'class': 'form-control'}), required=True)
     Id_file = forms.FileField(widget=forms.ClearableFileInput(
