@@ -1,0 +1,40 @@
+{% extends 'form/eventbase.html' %}
+
+{% block content %}
+
+<h1 class="mb-4 text-primary">Event form</h1>
+
+<div id="contact-forms">
+    {% include "form/form.html " %}
+</div>
+
+<div class="my-4">
+
+    <button type="button" 
+    class="btn btn-success me-2"
+    hx-get="{% url 'event:create_form' slug %}"
+    hx-target="#contact-forms"
+    hx-swap="beforeend">+ Add Field</button>
+
+
+    <button 
+    type="button" 
+    class="btn btn-primary" 
+    id="submit-all" 
+    onclick='return confirm("Are you sure to submit");'
+    >Submit</button><br>
+    
+
+
+</div>
+<ul id="contact-list">
+    {% for contact in contacts %}
+        {% include "form/contact.html" %}
+    {% endfor %}
+</ul>
+
+{% if contacts %}
+<p>successfully submitted.</p>
+{%endif%}
+<a href="{% url 'home' %}" class="btn btn-success mt-3">home</a>
+{% endblock %}

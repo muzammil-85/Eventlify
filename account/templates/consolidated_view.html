@@ -1,28 +1,14 @@
 {% extends "base.html" %}{% load staticfiles %}{% block head_title %}Consolidated View | {{ block.super }}{% endblock %}
 {% block css %}{% endblock %}{% block content %}
-    <main role="main" class="container p-4 mt-md-4 mt-2 mb-5">{% if user.is_superuser %}
-        <div class="pb-4">Center of Excellence:
-            <a href="{% url 'account:consolidated_view_all' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="All Event">All</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='SDA' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Structural Design And Analysis">SDA</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='NW' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Cisco Networking Academy">NW</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='TIES' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Texas Instruments Embedded System Lab">TIES</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='SMC' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="SMC India Pvt Ltd.">SMC</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='IARTC' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Industrial Automation Research And Training Centre">IARTC</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='VLSI' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="VLSI Design">VLSI</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='BIGD' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Big Data Analytics">BIGD</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='MobApp' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Mobile Application Development">MobApp</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='SWD' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Center For Enterprise Software Development">SWD</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='TST' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="Testing">TST</a>
-            <a href="{% url 'account:consolidated_c_o_e' c_o_e='NI' %}" class="btn btn-sm btn-outline-primary m-2" style="min-width: 50px;" title="ABES-NI Innovation Centre">NI</a>
-        </div>{% endif %}
+    <main role="main" class="container p-4 mt-md-4 mt-2 mb-5">
         <div class="card-deck my-4"  >{% if user.is_staff or user.is_superuser %}{% for event in event_list %}
             <div class="card mb-4 shadow-sm" style="height: 25rem;">
-                <div class="card-header btn-toolbar justify-content-between">
+                <div style="color: black;" class="card-header btn-toolbar justify-content-between">
                     <span class="font-weight-normal text-capitalize">{{ event.types }}</span> 
                     {% if now <= event.registration_end %}<span class="text-success">Active</span>
                     {% else %}<span class="text-danger">Not Active</span>{% endif %}
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="color: black;">
                     <p>Event Name:
                         <a href="{% url 'event:event_detail' event.slug %}">{{ event.event_title }}</a><br> 
                         Event Code:

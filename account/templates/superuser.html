@@ -1,12 +1,16 @@
-{% extends "base.html" %}{% load staticfiles %}{% block head_title %}User | {{ block.super }}{% endblock %}
-{% block css %}{% endblock %}{% block content %}{% if user.is_superuser %}
+{% extends "base.html" %}{% load staticfiles %}{% block head_title %}Requests | {{ block.super }}{% endblock %}
+{% block css %}{% endblock %}{% block content %}
+
+<!-- {% if user.is_superuser %}
     <div class="bg-white pb-4 px-md-5 px-2 rounded shadow-sm">
-        <div class="pt-4 d-flex justify-content-between"><h2>List of User</h2>
+        <div class="pt-4 d-flex justify-content-between">
+            <h2>List of Staff</h2>
             <div style="width: 300px">
                 <input type="text" class="form-control" id="search" onkeyup="mySearch123()" placeholder="Search...">
             </div>
         </div>
-        <div class="py-3 pb-2 table-responsive-xl">{% if u %}
+        <div class="py-3 pb-2 table-responsive-xl">
+            {% if u %}
             <table class="table table-bordered table-hover" id="myTable">
                 <thead>
                 <tr style="font-weight: 600;">
@@ -23,6 +27,7 @@
                         <td scope="row">{{ forloop.counter }}</td>
                         <td>{{ i.first_name }} {{ i.last_name }}</td>
                         <td>{{ i.email }}</td>
+                        
                         <td style="text-align: center; vertical-align: middle;">
                             <a href="{% url 'account:consolidated_username' username=i %}">
                                 <img src="{% static 'images/icons8-profile.png' %}" alt="Profile"></a></td>
@@ -31,13 +36,14 @@
                                 <img src="{% static 'images/icons8-edit.png' %}" alt=""></a></td>
                         <td style="text-align: center; vertical-align: middle;">
                             <a href="{% url 'account:delete_user' username=i %}">
-                                <img src="{% static 'images/icons8-cancel.png' %}" alt="&times;"></a>
+                                <img src="{% static 'images/delete.jpg' %}" width="50rem" height="50rem" alt="&times;"></a>
                     </tr>{% endfor %}</tbody>
-            </table>{% else %}
-            <h3>No User yet</h3>{% endif %}</div>
+            </table>
+            {% else %}
+            <h5>No Requests yet</h5>{% endif %}</div>
         <div class="clearfix">
             <button class="btn btn-sm btn-outline-info" style="width:150px;" data-toggle="modal"
-                    data-target="#myModal">Add User
+                    data-target="#myModal">Add Staff
             </button>
         </div>
     </div>
@@ -46,7 +52,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Add User</h4>
+                    <h4 class="modal-title" id="myModalLabel">Add Staff</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
@@ -83,7 +89,296 @@
                 </div>
             </div>
         </div>
-    </div>{% endif %}
+    </div>
+{% endif %} -->
+
+{% if user.is_superuser %}
+    <div class="bg-white pb-4 px-md-5 px-2 rounded shadow-sm">
+        <div class="pt-4 d-flex justify-content-between">
+            <h2>List of Request</h2>
+        </div>
+        <div class="py-3 pb-2 table-responsive-xl">
+            {% if unverified %}
+            
+            <table class="table table-bordered table-hover" id="myTable">
+                <thead>
+                <tr style="font-weight: 600;">
+                    <th scope="col" width="5%">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">status</th>
+                    <th scope="col" width="10%" style="text-align: center; vertical-align: middle;">Detail</th>
+                    <th scope="col" width="10%" style="text-align: center; vertical-align: middle;">Accept</th>
+                    <th scope="col" width="10%" style="text-align: center; vertical-align: middle;">Reject</th>
+                </tr>
+                </thead>
+                
+                <tbody>
+                    {% for i in unverified %}
+                    <tr>
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td>{{ i.Fname }} {{ i.Lname }}</td>
+                    <td>{{ i.Email }}</td>
+                    <td>{{ i.status }}</td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="#myModal1" data-toggle="modal" data-target="#myModal1{{ forloop.counter }}">
+                        <img src="{% static 'images/icons8-profile.png' %}" alt="Profile">
+                        </a>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="{% url 'account:accept_organizer' id=i.id %}" class="accept-btn">
+                        <img src="{% static 'images/tick.jpg' %}" alt="" width="50rem" height="50rem">
+                        </a>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="{% url 'account:reject_organizer' id=i.id %}" class="reject-btn">
+                        <img src="{% static 'images/cross.jpg' %}" width="50rem" height="50rem" alt="&times;">
+                        </a>
+                    </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+            {% else %}
+            <h5>No Request yet</h5>
+            {% endif %}</div>
+    </div>
+
+    {% for i in unverified %}
+    <div
+        class="modal fade"
+        id="myModal2{{ forloop.counter }}"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="myModalLabel2{{ forloop.counter }}"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title px-1" id="myModalLabel2{{ forloop.counter }}">Details</h4>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body px-4">
+                    <div class="modal-details">
+                        <p><strong>Fullname:</strong> {{ i.Fname }} {{ i.Lname }}</p>
+                        <p><strong>Mobile:</strong> {{ i.Mobile }}</p>
+                        <p><strong>Email:</strong> {{ i.Email }}</p>
+                        <p><strong>Date of Birth:</strong> {{ i.Dob }}</p>
+                        <p><strong>Address:</strong> {{ i.Address|safe }}</p>
+                        <p><strong>ID Type:</strong> {{ i.Id_type }}</p>
+                        <p>
+                            <strong>ID File:</strong>
+                            <a href="{{ base }}/media/{{ i.Id_file }}">{{ i.Id_type }} FILE</a>
+                        </p>
+                    </div>
+                    <button
+                        data-dismiss="modal"
+                        aria-label="Close"
+                        class="btn col-3 btn-outline-danger mb-2 mt-2 float-right"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+{% if user.is_superuser %}
+<div class="bg-white pb-4 px-md-5 px-2 rounded shadow-sm">
+    <div class="pt-4 d-flex justify-content-between">
+        <h2>List of accepted Request</h2>
+    </div>
+    <div class="py-3 pb-2 table-responsive-xl">
+        {% if verified %}
+        <table class="table table-bordered table-hover" id="myTable">
+            <thead>
+            <tr style="font-weight: 600;">
+                <th scope="col" width="5%">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">status</th>
+                <th scope="col" width="10%" style="text-align: center; vertical-align: middle;">Detail</th>
+                <th scope="col" width="10%" style="text-align: center; vertical-align: middle;">Reject</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for i in verified %}
+                <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ i.Fname }} {{ i.Lname }}</td>
+                <td>{{ i.Email }}</td>
+                <td>{{ i.status }}</td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <a href="#myModal2" data-toggle="modal" data-target="#myModal2{{ forloop.counter }}">
+                    <img src="{% static 'images/icons8-profile.png' %}" alt="Profile">
+                    </a>
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <a href="{% url 'account:reject_organizer' id=i.id %}" class="reject-btn">
+                    <img src="{% static 'images/cross.jpg' %}" width="50rem" height="50rem" alt="&times;">
+                    </a>
+                </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h5>No Requests yet</h5>{% endif %}
+    </div>
+</div>
+
+{% for i in verified %}
+<div
+    class="modal fade"
+    id="myModal2{{ forloop.counter }}"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel2{{ forloop.counter }}"
+    aria-hidden="true"
+>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title px-1" id="myModalLabel2{{ forloop.counter }}">Details</h4>
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="modal-details">
+                    <p><strong>Fullname:</strong> {{ i.Fname }} {{ i.Lname }}</p>
+                    <p><strong>Mobile:</strong> {{ i.Mobile }}</p>
+                    <p><strong>Email:</strong> {{ i.Email }}</p>
+                    <p><strong>Date of Birth:</strong> {{ i.Dob }}</p>
+                    <p><strong>Address:</strong> {{ i.Address|safe }}</p>
+                    <p><strong>ID Type:</strong> {{ i.Id_type }}</p>
+                    <p>
+                        <strong>ID File:</strong>
+                        <a href="{{ base }}/media/{{ i.Id_file }}">{{ i.Id_type }} FILE</a>
+                    </p>
+                </div>
+                <button
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    class="btn col-3 btn-outline-danger mb-2 mt-2 float-right"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if user.is_superuser %}
+<div class="bg-white pb-4 px-md-5 px-2 rounded shadow-sm">
+    <div class="pt-4 d-flex justify-content-between">
+        <h2>List of Rejected Request</h2>
+    </div>
+    <div class="py-3 pb-2 table-responsive-xl">
+        {% if rejected %}
+        <table class="table table-bordered table-hover" id="myTable">
+            <thead>
+            <tr style="font-weight: 600;">
+                <th scope="col" width="5%">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">status</th>
+                <th scope="col" width="10%" style="text-align: center; vertical-align: middle;">Detail</th>
+                <th scope="col" width="10%" style="text-align: center; vertical-align: middle;">Accept</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for i in rejected %}
+                <tr>
+                <td scope="row">{{ forloop.counter }}</td>
+                <td>{{ i.Fname }} {{ i.Lname }}</td>
+                <td>{{ i.Email }}</td>
+                <td>{{ i.status }}</td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <a href="#myModal2" data-toggle="modal" data-target="#myModal2{{ forloop.counter }}">
+                    <img src="{% static 'images/icons8-profile.png' %}" alt="Profile">
+                    </a>
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <a href="{% url 'account:accept_organizer' id=i.id %}" class="reject-btn">
+                    <img src="{% static 'images/tick.jpg' %}" width="50rem" height="50rem" alt="&times;">
+                    </a>
+                </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h5>No Requests yet</h5>{% endif %}
+    </div>
+</div>
+
+{% for i in rejected %}
+<div
+    class="modal fade"
+    id="myModal2{{ forloop.counter }}"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel2{{ forloop.counter }}"
+    aria-hidden="true"
+>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title px-1" id="myModalLabel2{{ forloop.counter }}">Details</h4>
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="modal-details">
+                    <p><strong>Fullname:</strong> {{ i.Fname }} {{ i.Lname }}</p>
+                    <p><strong>Mobile:</strong> {{ i.Mobile }}</p>
+                    <p><strong>Email:</strong> {{ i.Email }}</p>
+                    <p><strong>Date of Birth:</strong> {{ i.Dob }}</p>
+                    <p><strong>Address:</strong> {{ i.Address|safe }}</p>
+                    <p><strong>ID Type:</strong> {{ i.Id_type }}</p>
+                    <p>
+                        <strong>ID File:</strong>
+                        <a href="{{ base }}/media/{{ i.Id_file }}">{{ i.Id_type }} FILE</a>
+                    </p>
+                </div>
+                <button
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    class="btn col-3 btn-outline-danger mb-2 mt-2 float-right"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
 {% endblock %}
 {% block script %}
     <script>
@@ -108,4 +403,57 @@
                 }
             }
         }
-    </script>{% endblock %}
+    </script>
+    <!-- Add the following code at the end of the template -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('.accept-btn').click(function(e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    var csrfToken = '{{ csrf_token }}';
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: {
+        csrfmiddlewaretoken: csrfToken
+      },
+      success: function() {
+        location.reload();
+      },
+      error: function() {
+        alert('An error occurred.');
+      }
+    });
+  });
+
+  $('.reject-btn').click(function(e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    var csrfToken = '{{ csrf_token }}';
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: {
+        csrfmiddlewaretoken: csrfToken
+      },
+      success: function() {
+        location.reload();
+      },
+      error: function() {
+        alert('An error occurred.');
+      }
+    });
+  });
+});
+</script>
+
+    
+    
+    
+    
+    
+    {% endblock %}

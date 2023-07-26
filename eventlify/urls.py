@@ -20,10 +20,7 @@ urlpatterns = [
 
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
     path('api/',include(router.urls)),
-    
-    
-    path('organizer/', include('organizer.urls')),
-    path('favicon.ico', RedirectView.as_view(url = staticfiles_storage.url('favicon.ico')))
+
 
     # path('set', set_user),
 ]

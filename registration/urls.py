@@ -3,8 +3,11 @@ from django.urls import path
 
 from .views import RegisterEvent, RegistrationDetail, RegisterorganizerList
 from .views import EnrollmentReport, RegistrationReport, TransactionReport
+from .razorpay import payment_view, payment_success_view
 
 urlpatterns = [
+    path('payment/', payment_view, name='payment'),
+    path('payment/success/', payment_success_view, name='payment_success'),
     path('<slug>/register-event', RegisterEvent.as_view(), name='register_event'),
     path('<slug>/organizer-list', login_required(RegisterorganizerList.as_view()), name='register_organizer_list'),
     path('<registration_id>/detail', login_required(RegistrationDetail.as_view()), name='registration_detail'),

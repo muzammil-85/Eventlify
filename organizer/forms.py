@@ -14,31 +14,28 @@ class organizerForm(forms.ModelForm):
     Lname = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
         required=True, max_length=30)
+    Email = forms.EmailField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Email'}),
+        required=True) 
     Mobile = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Mobile No'}),
         required=True, max_length=10)
-    Email = forms.EmailField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Email'}),
-        required=True)
     Dob = forms.DateField(widget=forms.DateInput(
         attrs={'type': 'date', 'class': 'form-control'}))
-    Profile_pic = forms.FileField(widget=forms.ClearableFileInput(
-        attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
+    
     Address = forms.CharField(widget=CKEditorUploadingWidget())
-    Id_type = forms.EmailField(
+    Id_type = forms.CharField(
         label='ID TYPE', widget=forms.Select(choices=ID_TYPE, attrs={'class': 'form-control'}), required=True)
     Id_file = forms.FileField(widget=forms.ClearableFileInput(
         attrs={'class': 'custom-file-input', 'style': "opacity:1"}), required=True)
 
     class Meta:
         model = organizerRecord
-        fields = ['Fname', 'Lname', 'Mobile', 'Email', 'Dob', 'Profile_pic','Address','Id_type','Id_file']
-
-    def clean_email(self):
-        Email = None
+        fields = ['Fname', 'Lname', 'Mobile', 'Email', 'Dob','Address','Id_type','Id_file']
+    def clean_Email(self):
+        email = self.cleaned_data['Email']
         try:
-            Email = self.cleaned_data['Email']
-            organizerRecord.objects.get(Email=Email)
+            organizerRecord.objects.get(Email=email)
             raise forms.ValidationError("Email already taken. Try to login")
-        except ObjectDoesNotExist:
-            return Email
+        except organizerRecord.DoesNotExist:
+            return email

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from event.models import EventRecord
+from event.models import Answer, EventRecord
 from organizer.models import organizerRecord
 from .utils import registration_unique_slug, transaction_unique_slug
 
@@ -27,16 +27,13 @@ class TransactionRecord(models.Model):
 
 class RegistrationRecord(models.Model):
     registration_id = models.SlugField(unique=True)
+    transaction_id = models.ManyToManyField(TransactionRecord)
     amount = models.FloatField(default=0)
-    balance = models.FloatField(default=0)
-    type = models.CharField(max_length=50)
-    category = models.CharField(max_length=75)
     status = models.BooleanField(default=True)
     cancel = models.BooleanField(default=False)
-    transaction_id = models.ManyToManyField(TransactionRecord)
     organizer = models.ForeignKey(organizerRecord, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    event = models.ForeignKey(EventRecord, on_delete=models.PROTECT)
+    client = models.ForeignKey(Answer, on_delete=models.PROTECT) #dynamic forminte table ann ivide vendath
+    event = models.ForeignKey(EventRecord, on_delete=models.PROTECT, default='')
     update = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 

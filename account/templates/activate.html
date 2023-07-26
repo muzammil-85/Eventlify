@@ -1,31 +1,37 @@
 {% extends "base.html" %}{% block head_title %}Account Activation | {{ block.super }}{% endblock %}{% block content %}
     <main role="main" class="container col-xl-4 col-lg-5 col-md-6 p-4 mt-md-4 mt-2 mb-5" style="background-color: #f7f5f5;box-shadow: 0 0 5px 5px #d4d2cf;border-radius: 5px">
         <h3 class="text-center pb-3">Fill your Personal Detail</h3>
-        <form method="post">{% csrf_token %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <label for="first_name">First Name</label><input id="first_name" type="text" class="form-control" value="{{ user.first_name }}" disabled>
+                    <input type="hidden" name="Fname" value="{{ user.first_name }}">
                 </div>
                 <div class="col-md-6 mb-4">
                     <label for="last_name">Last Name</label><input id="last_name" type="text" class="form-control" value="{{ user.last_name }}" disabled>
+                    <input type="hidden" name="Lname" value="{{ user.last_name }}">
+                    
+                <input type="hidden" name="Email" value="{{ user.email }}">
                 </div>
             </div>
             <div class="mb-4">
-                <label for="email">Email</label><input id="email" type="email" class="form-control" value="{{ user.email }}" disabled>
+                <label for="email">Email</label><input id="email" type="email" class="form-control" value="{{ user.email }}" disabled>{{ form.email }}
             </div>
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label>Admission Number</label>{{ form.roll_no }}<span style="color:red;">{{ form.roll_no.errors }}</span>
+                    <label>Mobile Number</label>
+                    {{ form.Mobile }}<span style="color:red;">{{ form.Mobile.errors }}</span>
                 </div>
                 <div class="col-md-6 mb-4">
-                    <label>Phone Number</label>{{ form.number }}<span style="color:red;">{{ form.number.errors }}</span>
+                    <label>Date of Birth</label>{{ form.Dob }}<span style="color:red;">{{ form.Dob.errors }}</span>
                 </div>
             </div>
-            <div class="mb-4"><label>College Name</label>{{ form.college_name }}</div>
+            <div class="mb-4"><label>Address</label><br>{{ form.Address }}</div>
             <div class="row">
-                <div class="col-md-4 mb-4"><label>Branch</label>{{ form.branch }}</div>
-                <div class="col-md-4 mb-4"><label>Batch Start</label>{{ form.batch_start }}</div>
-                <div class="col-md-4 mb-4"><label>Batch End</label>{{ form.batch_end }}</div>
+                <div class="col-md-4 mb-4"><label>ID Type</label>{{ form.Id_type }}</div>
+                <div class="col-md-4 mb-4"><label>ID Upload</label>{{ form.Id_file }}</div>
             </div>
             <button type="submit" class="btn btn-success btn-block mb-4">Activate Account</button>
             <a href="{% url 'home' %}" class="btn btn-outline-danger btn-block">Go to Home Page</a>

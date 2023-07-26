@@ -1,0 +1,22 @@
+
+<form 
+hx-post="{% url 'create-contact' %}"
+hx-on="htmx:afterRequest:this.remove()"
+hx-trigger="click from:#submit-all">
+    <div class="row">
+        <div class="col-4 col-md-3">
+            <label for="{{form.type.id_for_label}}">{{ form.type.label }}</label>
+            {{form.type}}
+        </div>
+        <div class="col-4 col-md-3">
+            <label for="{{form.label.id_for_label}}">{{ form.label.label }}</label>
+            {{form.label}}
+        </div>
+        
+        <div class="col-3 align-self-end">
+            <button class="btn btn-danger" type="button" 
+           hx-on="click: this.closest('form').remove()"
+            >cancel</button>
+        </div>
+    </div>
+</form>

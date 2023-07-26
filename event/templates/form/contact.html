@@ -1,0 +1,38 @@
+{% if formupdate %}
+  
+{% for form in formupdate %}
+  <div class="row mt-4">
+    <div class="col-4 col-md-3">
+        <label for="{{ form.type.id_for_label }}">{{ form.type.label }}</label>
+        {{ form.type }}
+    </div>
+    <div class="col-4 col-md-3">
+        <label for="{{ form.label.id_for_label }}">{{ form.label.label }}</label>
+        {{ form.label }}
+    </div>
+    <input type="hidden" name="{{ form.prefix }}-id" value="{{ form.instance.id }}">
+    <div class="col-3 align-self-end">
+        <button class="btn btn-danger" type="button" hx-on="click: this.closest('form').remove()">
+            Cancel
+        </button>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="row mt-4">
+    <div class="col-4 col-md-3">
+        <label for="{{ form.type.id_for_label }}">{{ form.type.label }}</label>
+        {{ form.type }}
+    </div>
+    <div class="col-4 col-md-3">
+        <label for="{{ form.label.id_for_label }}">{{ form.label.label }}</label>
+        {{ form.label }}
+    </div>
+    <input type="hidden" name="{{ form.prefix }}-id" value="{{ form.instance.id }}">
+    <div class="col-3 align-self-end">
+        <button class="btn btn-danger" type="button" hx-on="click: this.closest('form').remove()">
+            Cancel
+        </button>
+    </div>
+</div>
+{% endif %}

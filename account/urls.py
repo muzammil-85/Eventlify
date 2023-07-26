@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 
-from .views import superuser, del_user, edit_user
+from .views import superuser, del_user, edit_user, accept_organizer, reject_organizer
 from .views import logout, Login, Signup, ForgetPassword, Activate, ConsolidatedView
 
 urlpatterns = [
@@ -18,4 +18,6 @@ urlpatterns = [
     path('consolidated-view-all', login_required(ConsolidatedView.as_view()), name='consolidated_view_all'),
     path('consolidated-view-c_o_e/<c_o_e>', login_required(ConsolidatedView.as_view()), name='consolidated_c_o_e'),
     path('consolidated-view-username/<username>', login_required(ConsolidatedView.as_view()), name='consolidated_username'),
+    path('accept_organizer/<int:id>/', accept_organizer, name='accept_organizer'),
+    path('reject_organizer/<int:id>/', reject_organizer, name='reject_organizer'),
 ]

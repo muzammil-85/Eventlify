@@ -13,7 +13,7 @@ class EventRecord(models.Model):
     about = RichTextUploadingField(null=True, blank=True)
     event_start_date = models.DateField(null=True, blank=True)
     event_end_date = models.DateField(null=True, blank=True)
-    event_start_time = models.TimeField(null=True, blank=True)
+    event_start_time = models.TimeField(null=True, blank=True) 
     event_end_time = models.TimeField(null=True, blank=True)
     venue = models.CharField(max_length=150, null=True, blank=True)
     visibility = models.CharField(max_length=50, null=True, blank=True)
@@ -66,3 +66,41 @@ class DataList(models.Model):
     def __str__(self):
         return self.place
 
+
+# class Client(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.PROTECT,null=True,blank=True)
+#     event = models.ForeignKey(EventRecord,null=True,on_delete=models.PROTECT,blank=True)
+#     type = models.CharField(max_length=128,null=True)
+#     label = models.CharField(max_length=20,null=True)
+    
+#     def __str__(self):
+#         return self.label
+
+OPTION = [
+    ('text', 'Text'),
+    ('check', 'Multiple Choice'),
+    ('number', 'Number'),
+    ('email', 'Email'),
+    ('textarea', 'Textarea')
+]
+
+
+class Client(models.Model):
+    email = models.EmailField(null=True)
+    event = models.ForeignKey(EventRecord, on_delete=models.CASCADE)
+    label = models.CharField(max_length=200,null=True)
+    type = models.CharField(max_length=20, choices=OPTION,null=True)
+    organizer = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    
+
+    def __str__(self):
+        return self.label
+
+
+class Answer(models.Model):
+    event = models.ForeignKey(EventRecord, null=True, on_delete=models.PROTECT, blank=True)
+    question = models.ForeignKey(Client, null=True, on_delete=models.PROTECT)
+    response = models.CharField(max_length=200,null=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.event.name} - {self.question.question_text}"

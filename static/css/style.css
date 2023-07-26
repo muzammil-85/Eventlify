@@ -10,9 +10,9 @@ label {margin: 0;}
     .fit-text {max-width: 100%;}
 }
 .custom-a:hover {text-decoration: none;}
-.btn-custom {color: #FFFFFF;font-weight: 100;border-radius: 10rem;background-color: #1492E6;}
+.btn-custom { color: #FFFFFF; font-weight: 100; border-radius: 1rem; background-color: #1492E6; -webkit-border-radius: 1rem; -moz-border-radius: 1rem; -ms-border-radius: 1rem; -o-border-radius: 1rem; }
 .btn-custom:hover {background-color: #FFFFFF;color: #1492E6}
-.btn-custom-white {color: #1492E6;;font-weight: 100;border-radius: 10rem;background-color: #FFFFFF;}
+.btn-custom-white { color: #1492E6; font-weight: 100; border-radius: 1rem; background-color: #FFFFFF; -webkit-border-radius: 1rem; -moz-border-radius: 1rem; -ms-border-radius: 1rem; -o-border-radius: 1rem; }
 .bg-blue {background-color: #1492E6}
 .btn-custom-white:hover {background-color: #1492E6;color: #FFFFFF}
 .card-custom {border-radius: 10rem; text-decoration: none; color: #FFFFFF !important; border: 3px solid #ffffff;}
@@ -80,7 +80,6 @@ body {
   
   .card {
     height: 250px;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
     background-size: cover !important;
     color: white;
     position: relative;
@@ -130,5 +129,4 @@ body {
   }
   .features p {
     font-size: 15px;
-    font-weight: lighter;
   }

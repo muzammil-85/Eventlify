@@ -3,7 +3,7 @@ from datetime import date
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 
-from .models import EventRecord
+from .models import Answer, EventRecord, Client
 
 EVENTS = [('workshop', 'Workshop'), ('seminar', 'Seminar')]
 MODE = [('public', 'Public'),('private', 'Private') ]
@@ -121,3 +121,45 @@ class EventForm(forms.ModelForm):
             raise forms.ValidationError("Invalid Event Date")
         except Exception:
             raise forms.ValidationError("Invalid Event Date")
+
+
+
+OPTION = [('text', 'Text'),('check', 'Multiple Choice'),('number','Number'),('email','Email'),('textarea','Textarea') ]
+
+class ClientForm(forms.ModelForm):
+    
+    type = forms.CharField(widget=forms.Select(
+        choices=OPTION, attrs={'class': 'form-control'}), required=True)
+    
+    label = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Field'}), required=True, max_length=100)
+    
+    class Meta:
+        model = Client
+        fields = [
+            "type", "label"
+            
+        ]
+        
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['question', 'response']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Customize the widget for the 'response' field based on the question's answer type
+        question = self.fields['question'].queryset.first()
+        if question:
+            answer_type = question.answer_type
+            if answer_type == 'text':
+                self.fields['response'].widget = forms.TextInput(attrs={'class': 'form-control'})
+            elif answer_type == 'check':
+                self.fields['response'].widget = forms.CheckboxSelectMultiple()
+            elif answer_type == 'number':
+                self.fields['response'].widget = forms.NumberInput(attrs={'class': 'form-control'})
+            elif answer_type == 'email':
+                self.fields['response'].widget = forms.EmailInput(attrs={'class': 'form-control'})
+            elif answer_type == 'textarea':
+                self.fields['response'].widget = forms.Textarea(attrs={'class': 'form-control'})

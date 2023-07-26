@@ -2,13 +2,112 @@ from datetime import date
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from django.shortcuts import render, redirect
+from django.forms import modelformset_factory
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import TemplateView
+from organizer.models import organizerRecord
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
 
 from registration.models import RegistrationRecord
-from .forms import EventForm
-from .models import EventRecord
+from .forms import AnswerForm, EventForm,ClientForm
+from .models import Answer, EventRecord,Client
 from eventlify.settings import BASE_URL
+
+
+
+def createform(request,*args, **kwargs):
+    if(request.method == "POST"):
+        form = ClientForm(request.POST)
+        obj = EventRecord.objects.get(slug=kwargs['slug'])
+        if form.is_valid():
+            temp = form.save(commit=False)
+            print("**********************")
+            
+            # if(temp.label.lower() == 'email'):
+                
+            
+            print(temp.label=='email')
+            print("**********************")
+            temp.organizer = request.user
+            temp.event = obj
+            temp.save()
+            
+            messages.success(request, 'Submitted Successfully')
+            context = {"form": temp}
+            return render(request, "form/contact.html",context)
+    
+    else:
+        try:
+            obj = EventRecord.objects.get(slug=kwargs['slug'])
+            form = ClientForm()
+            context = {'form': form,'slug':obj.slug}
+            return render(request, "form/form.html", context)
+        except Exception:
+            return redirect('event:event_list')
+        
+
+
+def answerform(request,*args, **kwargs):
+    if(request.method == "POST"):
+        form = AnswerForm(request.POST)
+        obj = EventRecord.objects.get(slug=kwargs['slug'])
+        if form.is_valid():
+            temp = form.save(commit=False)
+            temp.user = request.user
+            temp.event = obj
+            temp.save()
+            messages.success(request, 'Submitted Successfully')
+            context = {"contact": temp}
+            return render(request, "form/contact.html",context)
+    
+    else:
+        try:
+            obj = EventRecord.objects.get(slug=kwargs['slug'])
+            form = AnswerForm()
+            context = {'form': form,'slug':obj.slug}
+            return render(request, "form/form.html", context)
+        except Exception:
+            return redirect('event:event_list')
+        
+
+def updateform(request, *args, **kwargs):
+    obj = get_object_or_404(EventRecord, slug=kwargs['slug'])
+    clt_queryset = Client.objects.filter(event=obj)
+    
+    if request.method == "POST":
+        ClientFormSet = modelformset_factory(Client, form=ClientForm, extra=0)
+        formset = ClientFormSet(request.POST, queryset=clt_queryset)
+        if formset.is_valid():
+            formset.save()
+            messages.success(request, 'Form Updated')
+            context = {"formupdate": formset}
+            return render(request, "form/contact.html", context)
+        else:
+            messages.error(request, 'Invalid Input')
+    else:
+        formset = ClientForm()
+
+    context = {'formset': formset, 'slug': obj.slug}
+    return render(request, "form/form.html", context)
+
+
+def showform(request, *args, **kwargs):
+    obj = EventRecord.objects.get(slug=kwargs['slug'])
+    clt = Client.objects.filter(event=obj)
+    
+    if clt:
+        ClientFormSet = modelformset_factory(Client, form=ClientForm, extra=0)
+        formset = ClientFormSet(queryset=clt)
+    else:
+        formset = ClientForm()
+    
+    context = {'formset': formset, 'slug': obj.slug, 'client': clt}
+    return render(request, "form/index.html", context)
+
+    
 
 # Create your views here.
 class EventListView(TemplateView):
@@ -29,6 +128,7 @@ class EventDetail(TemplateView):
             owner = False
             registered = True
             obj = EventRecord.objects.get(slug=kwargs['slug'])
+            base_url = BASE_URL
             
             if obj.user == request.user or request.user.is_superuser:
                 owner = True
@@ -38,17 +138,11 @@ class EventDetail(TemplateView):
                 except Exception:
                     registered = False
             return render(request, self.template_name,
-                          {'obj': obj, 'owner': owner, 'registered': registered, 'now': date.today()})
+                          {'obj': obj, 'owner': owner, 'registered': registered, 'now': date.today(),'base':base_url})
         except ObjectDoesNotExist:
             messages.error(request, 'Event Not found')
             return redirect('event:event_list')
 
-class EventDetailForm(TemplateView):
-    template_name = 'event_client_form.html'
-
-    def get(self, request, *args, **kwargs):
-       return render(request, self.template_name)
-       
 
     # def post(self, request):
     #     if True:
@@ -65,39 +159,48 @@ class EventDetailForm(TemplateView):
     #         else:
     #             raise PermissionDenied
     #         return render(request, self.template_name, {'form': form,'base':BASE_URL})
+    
 # noinspection PyBroadException
 class AddEvent(TemplateView):
     template_name = 'add_update_event.html'
-
     def get(self, request, *args, **kwargs):
-        try:
-            if request.user.is_staff:
-                form = EventForm()
-            else:
-                raise PermissionDenied
-            return render(request, self.template_name, {'form': form})
-        except PermissionDenied:
-            messages.error(request, 'Permission Denied')
+        status = ''
+        
+        st = organizerRecord.objects.filter(user=request.user)
+        for i in st:
+            status = i.status
+        if status == 'verified':
+            try:
+                if request.user.is_staff:
+                    form = EventForm()
+                else:
+                    raise PermissionDenied
+                return render(request, self.template_name, {'form': form})
+            except PermissionDenied:
+                messages.error(request, 'Permission Denied')
+                return redirect('event:event_list')
+        else:
+            messages.warning(request, "Your account is not verified.please wait until it verify")
             return redirect('event:event_list')
 
     def post(self, request):
-        if True:
+        try:
             if request.user.is_staff:
                 form = EventForm(request.POST, request.FILES)
                 if form.is_valid():
                     temp = form.save(commit=False)
                     temp.user = request.user
-                    form.save()
+                    temp.save()
                     messages.success(request, 'Event Added')
-                    return redirect('event:event_form')
+                    return redirect('event:event_form',temp.slug)
                 else:
                     messages.error(request, 'Invalid Input')
             else:
                 raise PermissionDenied
             return render(request, self.template_name, {'form': form,'base':BASE_URL})
-        # except Exception:
-        #     messages.error(request, 'Permission Denied')
-        #     return redirect('event:event_list')
+        except Exception:
+            messages.error(request, 'Permission Denied')
+            return redirect('event:event_list')
 
 
 # noinspection PyBroadException
@@ -135,11 +238,13 @@ class UpdateEvent(TemplateView):
                             organizer.save(update_fields=['balance'])
                     form.save()
                     messages.success(request, 'Event Updated')
-                    return redirect('event:event_detail', kwargs['slug'])
+                    # return redirect('event:event_detail', kwargs['slug'])
+                    return redirect('event:event_form',kwargs['slug'])
                 else:
                     messages.error(request, 'Invalid Input')
                 return render(request, self.template_name, {'form': form})
             else:
+                
                 raise PermissionDenied
         except Exception:
             messages.error(request, 'Permission Denied')

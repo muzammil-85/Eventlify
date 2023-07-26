@@ -13,8 +13,11 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 from event.models import EventRecord
+from eventlify.settings import BASE_URL
 from registration.models import RegistrationRecord
 from organizer.forms import organizerForm
 from organizer.models import organizerRecord
@@ -49,19 +52,27 @@ class Login(TemplateView):
         try:
             form = LoginForm(request.POST)
             form1 = EmailForm(request.POST)
+            status=''
 
             # Login Form
             if form.is_valid():
                 email = form.cleaned_data['email']
                 password = form.cleaned_data['password']
                 user = authenticate(username=email.lower(), password=password)
+                u = organizerRecord.objects.filter(Email=email)
+                for i in u:
+                    status = i.status
+                
                 if user is not None:
                     if is_block(request, user):
                         raise PermissionDenied('Your Account is blocked. Please Contact Us')
                     login(request, user)
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
-                    return redirect("account:consolidated_view_all")
+                    if status == 'unverified':
+                        messages.warning(request, 'You can add event after the admin approve')
+
+                    return redirect("event:event_list")
                 else:
                     messages.error(request, "Your authentication information is incorrect. Please try again.")
 
@@ -133,7 +144,7 @@ class Signup(TemplateView):
                     print('account created')
                 except ObjectDoesNotExist:
                     user = User.objects.create(username=email, email=email, password=password, first_name=first_name,
-                                               last_name=last_name, is_active=False)
+                                               last_name=last_name, is_active=False,is_staff=False)
                     print('account created')
                     
 
@@ -199,15 +210,17 @@ class Activate(TemplateView):
                 if is_block(request, user):
                     raise PermissionDenied('Your Account is blocked. Please Contact Us')
 
-                form = organizerForm(request.POST)
+                form = organizerForm(request.POST,request.FILES)
+                
                 if form.is_valid():
                     temp = form.save(commit=False)
                     temp.user = user
                     temp.save()
-                    user.is_active = True
+                    user.is_active = False
                     user.save()
                     auth.login(request, user)
                     messages.success(request, 'Thank you for Registration')
+                    messages.warning(request, 'You can add event after the admin approve')
                     return redirect("event:event_list")
                 else:
                     messages.warning(request, 'Invalid Input')
@@ -352,18 +365,44 @@ def superuser(request):
                     email = form.cleaned_data['email']
                     password = form.cleaned_data['password']
                     User.objects.create_user(username=username.lower(), email=email.lower(), password=password,
-                                             first_name=first_name, last_name=last_name, is_active=True, is_staff=True)
+                                             first_name=first_name, last_name=last_name, is_active=True, is_staff=True,)
                     messages.success(request, 'User Created')
                 else:
                     messages.error(request, 'Invalid Inputs')
             except Exception:
-                messages.warning(request, 'User name and already exits')
+                messages.warning(request, 'User name already exits')
         form = SignupForm()
         user = User.objects.filter(is_staff=True, is_superuser=False)
-        return render(request, 'superuser.html', {'u': user, 'form': form})
+        new_user = User.objects.filter(is_staff=False, is_superuser=False)
+        org_uv = organizerRecord.objects.filter(status='unverified')
+        org_v = organizerRecord.objects.filter(status='verified')
+        org_r = organizerRecord.objects.filter(status='rejected')
+        base_url = BASE_URL
+
+        return render(request, 'superuser.html', {'u': user, 'form': form, 'new':new_user, "unverified":org_uv,"verified":org_v,"rejected":org_r,'base':base_url})
     else:
         raise PermissionDenied
 
+
+def accept_organizer(request, id):
+    if request.method == 'POST':
+        organizer = get_object_or_404(organizerRecord, id=id)
+        organizer.status = 'verified'
+        organizer.save()
+        
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+def reject_organizer(request, id):
+    print(request.method)
+    
+    if request.method == 'POST':
+        organizer = get_object_or_404(organizerRecord, id=id)
+        print(organizer.status)
+        organizer.status = 'rejected'
+        organizer.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 
 def edit_user(request, username):
     try:
