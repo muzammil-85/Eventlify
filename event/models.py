@@ -16,6 +16,8 @@ class EventRecord(models.Model):
     event_start_time = models.TimeField(null=True, blank=True) 
     event_end_time = models.TimeField(null=True, blank=True)
     venue = models.CharField(max_length=150, null=True, blank=True)
+    state = models.CharField(max_length=150, null=True, blank=True)
+    country = models.CharField(max_length=150, null=True, blank=True)
     visibility = models.CharField(max_length=50, null=True, blank=True)
     platform = models.CharField(max_length=50, null=True, blank=True)
     registration_start = models.DateField(null=True, blank=True)
@@ -31,7 +33,8 @@ class EventRecord(models.Model):
     event_booked = models.IntegerField(default=0)
     registration_open = models.BooleanField(default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    deleted = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.registration_start and self.registration_end:
@@ -59,26 +62,10 @@ class EventRecord(models.Model):
         return unique_slug
 
 
-class DataList(models.Model):
-    place = models.CharField(max_length=50)
-    number = models.IntegerField()
 
-    def __str__(self):
-        return self.place
-
-
-# class Client(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.PROTECT,null=True,blank=True)
-#     event = models.ForeignKey(EventRecord,null=True,on_delete=models.PROTECT,blank=True)
-#     type = models.CharField(max_length=128,null=True)
-#     label = models.CharField(max_length=20,null=True)
-    
-#     def __str__(self):
-#         return self.label
 
 OPTION = [
     ('text', 'Text'),
-    ('check', 'Multiple Choice'),
     ('number', 'Number'),
     ('email', 'Email'),
     ('textarea', 'Textarea')
@@ -86,11 +73,10 @@ OPTION = [
 
 
 class Client(models.Model):
-    email = models.EmailField(null=True)
     event = models.ForeignKey(EventRecord, on_delete=models.CASCADE)
     label = models.CharField(max_length=200,null=True)
     type = models.CharField(max_length=20, choices=OPTION,null=True)
-    organizer = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    organizer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     
 
     def __str__(self):
@@ -98,9 +84,17 @@ class Client(models.Model):
 
 
 class Answer(models.Model):
-    event = models.ForeignKey(EventRecord, null=True, on_delete=models.PROTECT, blank=True)
-    question = models.ForeignKey(Client, null=True, on_delete=models.PROTECT)
+    email = models.EmailField(default='')
+    event = models.ForeignKey(EventRecord, null=True, on_delete=models.CASCADE, blank=True)
+    question = models.ForeignKey(Client, null=True, on_delete=models.CASCADE)
     response = models.CharField(max_length=200,null=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.event.name} - {self.question.question_text}"
+            return self.email
+
+class DataList(models.Model):
+    place = models.CharField(max_length=50)
+    number = models.IntegerField()
+
+    def __str__(self):
+        return self.place

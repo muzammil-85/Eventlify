@@ -1,4 +1,5 @@
 from datetime import date
+from django.db.models import Q
 
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
@@ -24,13 +25,6 @@ def createform(request,*args, **kwargs):
         obj = EventRecord.objects.get(slug=kwargs['slug'])
         if form.is_valid():
             temp = form.save(commit=False)
-            print("**********************")
-            
-            # if(temp.label.lower() == 'email'):
-                
-            
-            print(temp.label=='email')
-            print("**********************")
             temp.organizer = request.user
             temp.event = obj
             temp.save()
@@ -116,7 +110,29 @@ class EventListView(TemplateView):
     def get(self, request, *args, **kwargs):
         request.session['head_name'] = 'event'
         event_list = EventRecord.objects.all().order_by('-event_start_date')
-        return render(request, self.template_name, {'event_list': event_list})
+        form = EventForm()
+        category = request.GET.get('category')
+        platform = request.GET.get('platform')
+        search_query = request.GET.get('search')
+        if search_query:
+            event_list = event_list.filter(
+                Q(event_title__icontains=search_query) |
+                Q(about__icontains=search_query)
+            )
+
+        # Apply category filter if parameter is provided
+        if category != None:
+            event_list = event_list.filter(category=category)
+        if platform != None:
+            event_list = event_list.filter(platform=platform)
+        
+        now = date.today()
+        for i in event_list:
+            if not now <= i.registration_end:
+                i.registration_open = False
+                i.save(update_fields=['registration_open'])
+
+        return render(request, self.template_name, {'event_list': event_list,'form': form})
 
 
 # noinspection PyBroadException
@@ -164,6 +180,8 @@ class EventDetail(TemplateView):
 class AddEvent(TemplateView):
     template_name = 'add_update_event.html'
     def get(self, request, *args, **kwargs):
+        request.session['head_name'] = 'add_event'
+        
         status = ''
         
         st = organizerRecord.objects.filter(user=request.user)
@@ -231,13 +249,17 @@ class UpdateEvent(TemplateView):
                 if form.is_valid():
                     fee = form.cleaned_data['fees']
                     diff = fee - f
-                    if diff != 0:
-                        organizer_list = RegistrationRecord.objects.filter(event=obj)
-                        for organizer in organizer_list:
-                            organizer.balance += diff
-                            organizer.save(update_fields=['balance'])
-                    form.save()
-                    messages.success(request, 'Event Updated')
+                    if diff == 0:
+                        form.save()
+                        messages.success(request, 'Event Updated')
+                        
+                    else:
+                        if obj.event_booked == 0:
+                            form.save()
+                            messages.success(request, 'Event Updated')
+                        else:
+                            messages.warning(request, "Event Already Booked.Can't Change The Fee")
+                            raise PermissionDenied
                     # return redirect('event:event_detail', kwargs['slug'])
                     return redirect('event:event_form',kwargs['slug'])
                 else:
@@ -257,10 +279,13 @@ class DeleteEvent(TemplateView):
         try:
             obj = EventRecord.objects.get(slug=kwargs['slug'])
             if str(obj.timestamp) == kwargs['timestamp'] and (obj.user == request.user or request.user.is_superuser):
-                if obj.registered_organizer > 0:
-                    raise PermissionDenied('organizer Registered, You can not delete this event.')
-                obj.delete()
+                if obj.event_booked > 0:
+                    raise PermissionDenied('Client Registered, You can not delete this event.')
+                obj.deleted = True
+                obj.save(update_fields=['deleted'])
                 messages.success(request, 'Event Deleted')
+                
+                return redirect('account:consolidated_view_all')
             else:
                 raise PermissionDenied('Permission Denied')
         except ObjectDoesNotExist:

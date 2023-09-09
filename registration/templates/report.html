@@ -27,17 +27,14 @@
 </head>
 <body style="font-size: 12px;">
 <div style="text-align: center">
-    <!-- <img src="http://localhost:8001/static/images/abes_logo.png" alt="" style="width: 150px;">-->
-    <span style="font-size: 16px;">ABES Engineering College<br></span>
-    19th Km Stone NH-24, Near Crossing Republic, Ghaziabad - 201009 (UP), INDIA
+    <span style="font-size: 16px;">Eventlify<br></span>
     <!--<img src="http://localhost:8001/static/images/eventlify_logo.png" alt="" style="width: 150px;">-->
 </div>
 <br><br>
 <div style="text-align: justify;">
     Event Code: {{ event.slug }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    Event Name: {{ event.event_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    Event Date: {{ event.event_date|date:"M d, Y" }}<br>
-    Instructor Name: {{ event.resource_person }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Event Name: {{ event.event_title }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Event Date: {{ event.event_start_date|date:"M d, Y" }}<br>
     Event Fee: {{ event.fees }}
 </div>
 <table class="table">
@@ -45,10 +42,8 @@
     <tr>
         <th style="width: 8%;">S. No.</th>
         <th style="width: 15%;">Receipt No</th>
-        <th style="width: 20%;">organizer Name</th>
-        <th style="width: 15%;">Admission No.</th>
+        <th style="width: 20%;">Name</th>
         <th style="width: 10%;">Amount</th>
-        <th style="width: 10%">Balance</th>
         <th style="width: 12%;">Date</th>
         <th style="width: 10%;">Remark</th>
     </tr>
@@ -56,11 +51,9 @@
     <tbody>{% for organizer in organizer_list %}
         <tr>
             <td style="text-align: center">{{ forloop.counter }}</td>
-            <td style="text-align: center">{{ organizer.registration_id }}</td>
+            <td style="text-align: center">ENVT{{ organizer.id }}</td>
             <td>{{ organizer.organizer.user.first_name }} {{ organizer.organizer.user.last_name }}</td>
-            <td style="text-align: center">{{ organizer.organizer.roll_no }}</td>
             <td style="text-align: center">{{ organizer.amount }}</td>
-            <td style="text-align: center">{{ organizer.balance }}</td>
             <td style="text-align: center">{{ organizer.timestamp|date:"M d, Y" }}</td>
             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         </tr>{% endfor %}

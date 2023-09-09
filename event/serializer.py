@@ -3,7 +3,7 @@
 
 
 from rest_framework import serializers
-from .models import EventRecord, DataList
+from .models import EventRecord
 
 
 class EventRecordSerializer(serializers.ModelSerializer):
@@ -11,9 +11,3 @@ class EventRecordSerializer(serializers.ModelSerializer):
         model = EventRecord
         fields = '__all__'   # for needed field only ('fullname','mobile'). __all__ is means all the fields
         # exclude = ('id','slug','user')
-
-
-class DataListSerializer(serializers.ModelSerializer):
-    class Meta:  # all thing under this class become the object of above class.
-        model = DataList
-        fields = '__all__'  # for needed field only ('fullname','mobile'). __all__ is means all the fields

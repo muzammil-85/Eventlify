@@ -12,7 +12,7 @@ class TransactionRecord(models.Model):
     amount = models.FloatField()
     remark = models.CharField(max_length=55, default="-")
     registration_id = models.CharField(max_length=55)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     update = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -31,11 +31,12 @@ class RegistrationRecord(models.Model):
     amount = models.FloatField(default=0)
     status = models.BooleanField(default=True)
     cancel = models.BooleanField(default=False)
-    organizer = models.ForeignKey(organizerRecord, on_delete=models.PROTECT)
-    client = models.ForeignKey(Answer, on_delete=models.PROTECT) #dynamic forminte table ann ivide vendath
-    event = models.ForeignKey(EventRecord, on_delete=models.PROTECT, default='')
+    organizer = models.ForeignKey(organizerRecord, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    event = models.ForeignKey(EventRecord, on_delete=models.CASCADE, default='')
     update = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    
 
     def save(self, *args, **kwargs):
         if not self.registration_id:
@@ -45,24 +46,21 @@ class RegistrationRecord(models.Model):
     def __str__(self):
         return self.registration_id
 
-class Question(models.Model):
-    TEXT = 'text'
-    NUMBER = 'number'
-    MULTIPLE_CHOICE = 'multiple_choice'
-    TEXTAREA = 'textarea'
-    IMAGE = 'image'
+class PaymentRecord(models.Model):
 
-    QUESTION_TYPE_CHOICES = [
-        (TEXT, 'Text'),
-        (NUMBER, 'Number'),
-        (MULTIPLE_CHOICE, 'Multiple Choice'),
-        (TEXTAREA, 'Text Area'),
-        (IMAGE, 'Image'),
-    ]
+    amount = models.CharField(max_length=100,null=True)
+    order_id = models.CharField(max_length=100)
+    payment_id = models.CharField(max_length=100)
+    signature = models.CharField(max_length=100)
+    event = models.ForeignKey(EventRecord, on_delete=models.CASCADE, default='')
+    organizer = models.ForeignKey(organizerRecord, on_delete=models.CASCADE)
+    update = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
-    text = models.CharField(max_length=255)
-    question_type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES)
+    # def save(self, *args, **kwargs):
+    #     if not self.transaction_id:
+    #         self.transaction_id = transaction_unique_slug(self, self.registration_id)
+    #     super().save(*args, **kwargs)
 
-class MultipleChoiceOption(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    text = models.CharField(max_length=255)
+    def __str__(self):
+        return self.order_id

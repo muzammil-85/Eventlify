@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% load staticfiles %}{% block head_title %}Contactus {% endblock %} {% block css %}{% endblock %}{% block content %}
+    <main
+      role="main"
+      class="container col-xl-4 col-lg-5 col-md-6 p-4 mt-md-4 mt-2 mb-5"
+      style="
+        background-color: #f7f5f5;
+        box-shadow: 0 0 5px 5px #d4d2cf;
+        border-radius: 5px;
+      "
+    >
+      <h3 class="text-center pb-3">Contact us</h3>
+      <form id="signupForm" method="post">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label>Email:</label><a href="mailto:connect.Eventlify@gmail.com">connect.Eventlify@gmail.com</a>
+            
+          </div>
+          
+    </main>
+    {% endblock %}{% block script %}
+    
+    {% endblock %}
+    

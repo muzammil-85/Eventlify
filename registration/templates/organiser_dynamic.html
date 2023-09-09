@@ -1,0 +1,66 @@
+{% extends "base.html" %}{% load staticfiles %}{% block head_title %}organizer List | {{ block.super }}{% endblock %}
+{% block css %}{% endblock %}
+{% block content %}
+<div class="container mt-2">
+  <h2>User Details</h2>
+  {% for i in form %}
+  <form
+      method="post"
+      hx-post="{% url 'registration:register_event' event.slug %}"
+      
+      hx-on="htmx:afterRequest=nav()"
+      hx-trigger="click from:#submit-all"
+      >
+
+      {% csrf_token %}
+      <!-- Hidden input field to store the i.label value -->
+      <input type="hidden" name="label_id" value="{{i.id}}">
+      <div class="col-4 col-md-3" style="display: block;margin-bottom:1rem">
+          {% if i.type == 'textarea' %}
+          <div class="form-group">
+            <label for="{{i.label}}">{{i.label}}</label>
+            <textarea class="form-control" name="{{ i.label }}" id="{{i.label}}" placeholder="{{i.label}}" rows="3"></textarea>
+          </div>
+          {% else %}
+          {% if i.type == 'email' %}
+          <div>
+            <label for="{{i}}">{{i.label}}</label>
+            <input class="form-control" width="5rem" placeholder="{{i.label}}" pattern= '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$' type="{{i.type}}" name="{{i.label}}" id="{{i.label}}">
+          </div>
+          {% elif i.label == 'phone' %}
+          <div>
+            <label for="{{i}}">{{i.label}}</label>
+            <input class="form-control" width="5rem" placeholder="{{i.label}}" minlength="10" maxlength="10" type="{{i.type}}" name="{{i.label}}" id="{{i.label}}">
+          </div>
+          {% else %}
+          <div>
+            <label for="{{i}}">{{i.label}}</label>
+            <input class="form-control" width="5rem" placeholder="{{i.label}}"  type="{{i.type}}" name="{{i.label}}" id="{{i.label}}">
+          </div>
+          {% endif %}
+          {% endif %}
+      </div>
+    </form>
+    {% endfor %}
+
+      <button 
+    type="button" 
+    class="btn btn-primary" 
+    id="submit-all" 
+    onclick='nav()'
+    >Submit</button>
+    <br>
+
+<a href="{% url 'home' %}" class="btn btn-success mt-3">home</a>
+
+    
+
+</div>
+<script>
+    function nav(){
+      alert("Please wait")
+      alert("submitted")
+  };
+</script>
+
+{% endblock %}

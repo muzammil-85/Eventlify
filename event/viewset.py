@@ -6,9 +6,6 @@ class EventRecordViewset(viewsets.ModelViewSet):
     queryset =  models.EventRecord.objects.all()
     serializer_class = serializers.EventRecordSerializer
 
-class DataListViewset(viewsets.ModelViewSet):
-    queryset =  models.DataList.objects.all()
-    serializer_class = serializers.DataListSerializer
 
 # this view set automatically make some functions which are:
 # create()

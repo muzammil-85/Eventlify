@@ -50,15 +50,9 @@
 {% endif %}
 
 <script>
-    // Function to handle successful form submission
-    function handleFormSubmission(event) {
-        // Check if the response was successful
-        if (event.detail && event.detail.request && event.detail.request.status === 200) {
-            // Redirect to the home page (replace '/home/' with your actual home page URL)
-            window.location.href = "{% url 'home' %}";
-        }
-    }
-
-    // Add an event listener to handle the 'htmx:afterRequest' event
-    document.addEventListener('htmx:afterRequest', handleFormSubmission);
+    function nav(){
+        
+    window.location.href = "{%url 'home'%}";
+    alert('submitted successfully')
+  };
 </script>

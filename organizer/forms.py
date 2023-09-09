@@ -18,10 +18,10 @@ class organizerForm(forms.ModelForm):
         attrs={'class': 'form-control', 'placeholder': 'Email'}),
         required=True) 
     Mobile = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Mobile No'}),
-        required=True, max_length=10)
+        attrs={'class': 'form-control', 'placeholder': 'Mobile No','max':'10','min':'10',}),
+        required=True, max_length=10,min_length=10)
     Dob = forms.DateField(widget=forms.DateInput(
-        attrs={'type': 'date', 'class': 'form-control'}))
+        attrs={'type': 'date', 'class': 'form-control','id':'start','onclick':'dob()'}))
     
     Address = forms.CharField(widget=CKEditorUploadingWidget())
     Id_type = forms.CharField(

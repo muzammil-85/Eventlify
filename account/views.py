@@ -72,7 +72,7 @@ class Login(TemplateView):
                     if status == 'unverified':
                         messages.warning(request, 'You can add event after the admin approve')
 
-                    return redirect("event:event_list")
+                    return redirect("account:consolidated_view_all")
                 else:
                     messages.error(request, "Your authentication information is incorrect. Please try again.")
 
@@ -117,11 +117,16 @@ class Login(TemplateView):
     
 # noinspection PyBroadException
 
+def contactus(request):
+    request.session['head_name'] = 'contactus'
+    return render(request, "contactus.html")
+
 class Signup(TemplateView):
     template_name = 'signup.html'
 
     def get(self, request):
         # Render the signup form
+        request.session['head_name'] = 'signup'
         form = SignupForm()
         return render(request, self.template_name, {'form1': form})
 
@@ -141,11 +146,10 @@ class Signup(TemplateView):
                     user.last_name = last_name
                     user.set_password(password)
                     user.save()
-                    print('account created')
                 except ObjectDoesNotExist:
                     user = User.objects.create(username=email, email=email, password=password, first_name=first_name,
                                                last_name=last_name, is_active=False,is_staff=False)
-                    print('account created')
+                    
                     
 
                 '''Begin Email Sending '''
@@ -326,15 +330,13 @@ class ConsolidatedView(TemplateView):
     template_name = 'consolidated_view.html'
 
     def get(self, request, *args, **kwargs):
+        request.session['head_name'] = 'profile'
+
         try:
             if request.user.is_superuser:
-                if kwargs.get('c_o_e'):
-                    event_list = EventRecord.objects.filter(c_o_e=kwargs['c_o_e']).order_by('-id')
-                    print('aa')
-                elif kwargs.get('username'):
+                if kwargs.get('username'):
                     user = User.objects.get(username=kwargs['username'])
                     event_list = EventRecord.objects.filter(user=user).order_by('-id')
-                    print('bb')
                 else:
                     event_list = EventRecord.objects.all().order_by('-id')
             elif request.user.is_staff:
@@ -394,11 +396,9 @@ def accept_organizer(request, id):
     return JsonResponse({'success': False})
 
 def reject_organizer(request, id):
-    print(request.method)
     
     if request.method == 'POST':
         organizer = get_object_or_404(organizerRecord, id=id)
-        print(organizer.status)
         organizer.status = 'rejected'
         organizer.save()
         return JsonResponse({'success': True})

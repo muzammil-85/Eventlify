@@ -1,21 +1,21 @@
 {% autoescape off %}
-Dear {{ user.first_name }},
+Dear participant,
 
-Greetings from Centre of Skill Development and Employability (eventlify)
+Greetings from eventlify
 
-Thank you for registering in the course "{{ event.event_name }}". We wish you have an enjoyable and informative learning experience.
+Thank you for registering in the event "{{ event.event_title }}". We wish you have an enjoyable experience.
 
-The course will begin on {{ event.event_date }}. Your regular participation is vital for learning.
+The event will be on {{ event.event_start_date }}. Your participation is vital for event.
 
 Details regarding the course:
 
-Name : {{ event.event_name }}
-Duration : {{ event.duration_number }} {{ event.duration_string }}
+Name : {{ event.event_title }}
+Duration : {{ event.event_start_time }} {{ event.event_end_time }}
 Venue: {{ event.venue }}
-Instructor Name : {{ event.resource_person }}
+Platform Mode : {{ event.platform }}
 
-
-Once again, thanks for showing your interest in our courses and certification. Happy learning.
+Ticket : http://{{ domain }}/registration/{{event.slug}}/ticket/
+Once again, thanks for showing your interest in our event.
 
 --
 Regards

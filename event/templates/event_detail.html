@@ -61,6 +61,7 @@ Detail | {{ block.super }}{% endblock %}
       </div>
     <div class="row">
       <div class="col">
+        
         <h5>{{obj.event_start_date}}</h5>
         <h1>{{ obj.event_title|upper }}</h1>
         <h6>{{ obj.event_subtitle|upper }}</h6>
@@ -84,36 +85,56 @@ Detail | {{ block.super }}{% endblock %}
         </button>
         </div>
         
-        {% else %}{% if now <= obj.registration_end and obj.registration_open %}
-        <div class="card-body">
-          <h5 class="card-title">Tickets</h5>
-          <div class="">
-            <a class="btn btn-custom" href="" style="width: 2rem">-</a>
-            1
-            <a class="btn btn-custom" style="width: 2rem" href="">+</a>
-          </div>
-          {% if obj.fees == 0 %}
-          <p class="card-text">Free</p>
-          {%else%}
-          <p class="card-text">₹{{obj.fees}}</p>
+        {% else %}
+        
 
-          {%endif%}
-          <hr />
-          <a
-          class="btn btn-custom mb-4 w-100"
-          onclick='return confirm("Are you sure to register in {{ obj.event_name }}")'
-          href="{% url 'registration:register_event' obj.slug %}"
-          >Register Now</a>
-        </div>
+
+        {% if now <= obj.registration_end and obj.registration_open %}
+
+
+                  {% if obj.no_of_tickets >= obj.event_booked %}
+                  <div class="card-body">
+                    <button
+                    class="btn btn-custom mb-4"
+                    disabled
+                  >
+                    Registration Full</button>
+                    <p style="border-style: solid;
+                  border-width: medium;border-color: #1492E6;">EVENTID : EVTLY0{{obj.id}}</p>
+                  </div>
+                  {%else%}
+              <div class="card-body">
+                <h5 class="card-title">Tickets</h5>
+                <div class="">
+                    <a class="btn btn-custom" href="javascript:void(0);" onclick="decrementQuantity();" style="width: 2rem">-</a>
+                    <span id="quantity">1</span>
+                    <a class="btn btn-custom" href="javascript:void(0);" onclick="incrementQuantity();" style="width: 2rem">+</a>
+                </div>
+                {% if obj.fees == 0 %}
+                  <p class="card-text">Free</p>
+                {% else %}
+                  <p class="card-text">₹{{ obj.fees }}</p>
+                {% endif %}
+                <hr />
+                <a class="btn btn-custom mb-4 w-100"
+                  onclick='return confirm("Are you sure to register in {{ obj.event_name }}")'
+                  href="{% url 'registration:payment' obj.slug %}?quantity=" id="register-link">Register Now</a>
+                <p style="border-style: solid; border-width: medium; border-color: #1492E6;">EVENTID : EVTLY0{{ obj.id }}</p>
+            </div>
+            {%endif%}
+      
         {% else %}
         <div class="card-body">
           <button
           class="btn btn-custom mb-4"
           disabled
         >
-          Registration Closed</button
+          Registration Closed</button>
+          <p style="border-style: solid;
+        border-width: medium;border-color: #1492E6;">EVENTID : EVTLY0{{obj.id}}</p>
         </div>
-        {% endif %}{% endif %}
+        {% endif %}
+        {% endif %}
 
         
       </div>
@@ -141,7 +162,31 @@ Detail | {{ block.super }}{% endblock %}
     
   </section>
 
+  <script>
+    let currentQuantity = 1;
 
+    function updateQuantity() {
+        const quantityElement = document.getElementById('quantity');
+        quantityElement.innerText = currentQuantity;
+        const registerLink = document.getElementById('register-link');
+        registerLink.href = `{% url 'registration:payment' obj.slug %}?quantity=${currentQuantity}`;
+    }
+
+    function incrementQuantity() {
+        currentQuantity++;
+        updateQuantity();
+    }
+
+    function decrementQuantity() {
+        if (currentQuantity > 1) {
+            currentQuantity--;
+            updateQuantity();
+        }
+    }
+
+    // Initial update
+    updateQuantity();
+</script>
 
 
 

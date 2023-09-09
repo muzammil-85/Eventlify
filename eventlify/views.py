@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-
 from event.models import *
 from organizer.models import *
 

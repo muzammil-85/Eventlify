@@ -1,21 +1,21 @@
 {% autoescape off %}
 Dear {{ user.first_name }},
 
-Welcome to Centre of Skill Development and Employability (eventlify)!
+Welcome to Eventlify
 
-You're almost there! Use the link to activate your account to access our courses. Note that you will not be able to log back into your account until you have activated it.
+You're almost there! Use the link to activate your account. Note that you will not be able to log back into your account until you have activated it.
 
 http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}
 
-Enjoy learning with eventlify.
+Enjoy events with eventlify.
 
 --
 Regards
-eventlify Team
+Eventlify Team
 
 If you have any query, contact us
 Email {{ email }}
 Phone No. {{ number }}
 
-This email message was automatically sent by http://{{ domain }} because someone register course from your account.
+This email message was automatically sent by http://{{ domain }} because someone register event from your account.
 {% endautoescape %}

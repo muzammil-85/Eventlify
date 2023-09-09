@@ -119,7 +119,8 @@
     <hr>
     <div class="row">
       {% for data in event_list %}
-      {% if data.user.id == request.user.id %}
+      {% if data.user.id == request.user.id%}
+      {% if not data.deleted %}
       <div class="col-xs-12 col-sm-4">
       <div
         class="card"
@@ -132,16 +133,18 @@
           <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
           <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
           <p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p>
-          <p><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{data.types}} | {{data.category}}</p>
+          <p><i class="fa fa-graduation-cap" aria-hidden="true"></i>{{data.category}}</p>
 
         </div>
-        <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.platform }}</span></p>
+        <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.platform}}</span></p>
         <a
           class="card-link"
           href="{% url 'event:event_detail' data.slug %}"
         ></a>
       </div>
       </div>
+      {% endif %}
+
       {% endif %}
     {% endfor %}
     </div>
@@ -150,11 +153,21 @@
 {%else%}
 <div class="wrapper-grey padded">
   <div class="container">
+    <form action="{% url 'event:event_list' %}" class="form-inline justify-content-end" method="GET">
+      <!-- Add your other filtering options here -->
+      {{form.category}}
+      {{form.platform}}
+      <input type="text" class="form-control mr-sm-2" name="search" placeholder="Search events...">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Apply Filters & Search</button>
+  </form>
     <h2>All Events</h2>
     <hr>
     <div class="row">
       {% for data in event_list %}
+      {% if not data.deleted %}
+
       {% if data.visibility == 'public' %}
+
       <div class="col-xs-12 col-sm-4">
       <div
         class="card"
@@ -166,8 +179,8 @@
         <div class="card-about" style="color: #d7d7d7;">
           <h2 style="margin-bottom: 1rem;">{{ data.event_title }}</h2>
           <p><i class="fa fa-calendar-days" aria-hidden="true"></i> {{data.event_start_date }}</p>
-          <div style="display: inline;"><p><i class="fa fa-location-pin" aria-hidden="true"></i>{{data.venue }}</p></div>
-          <p><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{data.types}} | {{data.category}}</p>
+          <div style="display: inline;"><p><i class="fa fa-location-pin" aria-hidden="true"></i> {{data.venue }}</p></div>
+          <p><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{data.category}}</p>
 
         </div>
         <p class="card-user avatar avatar-large"><span class="badge  bg-primary fs-6">{{data.platform }}</span></p>
@@ -177,6 +190,7 @@
         ></a>
       </div>
     </div>
+    {% endif %}
     {% endif %}
     {% endfor %}
 </div>

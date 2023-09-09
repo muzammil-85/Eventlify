@@ -48,8 +48,8 @@
     >
       <a class="navbar-brand p-0" href="{% url 'home' %}"
         ><img
-          src="{% static 'images/eventlifylogo.jpg' %}"
-          style="width: 200px; padding-left: 1rem"
+          src="{% static 'images/eventlifylogo.png' %}"
+          style="width: 10rem; padding-left: 1rem;height: 4rem;"
           alt="eventlify"
       /></a>
       <button
@@ -65,12 +65,6 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <div class="flex-grow-1 flex-column">
-          <!-- <h2
-            class="text-white py-2 text-center"
-            style="font-size: 20px; background-color: maroon"
-          >
-            Centre for Building Skills & Employability
-          </h2> -->
           <div
             class="my-3 my-md-3 mr-md-5 align-items-md-center text-center text-md-right"
           >
@@ -79,11 +73,7 @@
               href="{% url 'home' %}"
               >Home</a
             >
-            <a
-              class="py-1 mr-md-5 ml-2 custom-a {% if request.session.head_name == 'event' %}under-line{% endif %}"
-              href="{% url 'event:event_list' %}"
-              >Event</a
-            >
+            
           
             {% if user.is_authenticated %} {% if user.is_superuser %}
             <a
@@ -91,12 +81,13 @@
               href="{% url 'account:superuser' %}"
               >Manage Request</a
             >
-            <a
-              class="py-1 mr-md-5 ml-2 custom-a {% if request.session.head_name == 'generate_report' %}under-line{% endif %}"
-              href=""
-              >Generate Report</a
-            >
+            
             {% elif user.is_staff %}
+            <a
+              class="py-1 mr-md-5 ml-2 custom-a {% if request.session.head_name == 'event' %}under-line{% endif %}"
+              href="{% url 'event:event_list' %}"
+              >Event</a
+            >
             <a
               class="py-1 mr-md-5 ml-2 custom-a {% if request.session.head_name == 'add_event' %}under-line{% endif %}"
               href="{% url 'event:add_event' %}"
@@ -114,14 +105,20 @@
             >
             {% else %}
             <a
-              class="py-1 mr-md-5 ml-2 custom-a {% if request.session.head_name == 'login' %}under-line{% endif %}"
-              href="{% url 'account:login' %}"
-              >Login</a
+              class="py-1 mr-md-5 ml-2 custom-a {% if request.session.head_name == 'event' %}under-line{% endif %}"
+              href="{% url 'event:event_list' %}"
+              >Event</a
             >
+            
             <a
               class="py-1 ml-2 custom-a {% if request.session.head_name == 'signup' %}under-line{% endif %}"
               href="{% url 'account:signup' %}"
-              >Signup</a
+              >Organizer</a
+            >
+            <a
+              class="py-1 ml-2 custom-a {% if request.session.head_name == 'contactus' %}under-line{% endif %}"
+              href="{% url 'account:contactus' %}"
+              >Contact Us</a
             >
             {% endif %}
           </div>

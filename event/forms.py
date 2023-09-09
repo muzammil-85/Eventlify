@@ -5,10 +5,10 @@ from django import forms
 
 from .models import Answer, EventRecord, Client
 
-EVENTS = [('workshop', 'Workshop'), ('seminar', 'Seminar')]
+EVENTS = [(None,'category'),('workshop', 'Workshop'), ('seminar', 'Seminar')]
 MODE = [('public', 'Public'),('private', 'Private') ]
 
-PLATFORM = [('offline', 'offline'),("online", "online")]
+PLATFORM = [(None,'platform'),('offline', 'offline'),("online", "online")]
 
 
 class EventForm(forms.ModelForm):
@@ -41,10 +41,16 @@ class EventForm(forms.ModelForm):
         attrs={'type': 'time', 'class': 'form-control'}))
     
     platform = forms.CharField(widget=forms.Select(
-        choices=PLATFORM, attrs={'class': 'form-control'}), required=True)
+        choices=PLATFORM, attrs={'class': 'form-control','name':'platform'}), required=True)
     
     venue = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'Venue'}), required=True, max_length=50)
+    
+    state = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'State'}), required=True, max_length=50)
+    
+    country = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Country'}), required=True, max_length=50)
     
     
     
@@ -61,7 +67,7 @@ class EventForm(forms.ModelForm):
         attrs={'class': 'form-control', 'placeholder': 'no of tickets'}), min_value=0, max_value=10000, required=True)
     
     category = forms.CharField(widget=forms.Select(
-        choices=EVENTS, attrs={'class': 'form-control'}), required=True)
+        choices=EVENTS, attrs={'class': 'form-control','name':'category'}), required=True)
     
     subcategory = forms.CharField(widget=forms.Select(
         choices=EVENTS, attrs={'class': 'form-control'}), required=True)
@@ -90,7 +96,7 @@ class EventForm(forms.ModelForm):
         model = EventRecord
         fields = ['event_title', 'event_subtitle', 'fees', 'about', 'event_start_date', 'event_end_date',
                   'event_start_time', 'event_end_time', 'venue', 'visibility', 'registration_start', 'registration_end', 'no_of_tickets',
-                  'category', 'subcategory', 'website', 'facebook', 'instagram',
+                  'category', 'subcategory', 'website', 'facebook', 'instagram','state','country',
                   'youtube', 'poster', 'platform','types'] 
 
     def clean_registration_start(self):
@@ -124,7 +130,7 @@ class EventForm(forms.ModelForm):
 
 
 
-OPTION = [('text', 'Text'),('check', 'Multiple Choice'),('number','Number'),('email','Email'),('textarea','Textarea') ]
+OPTION = [('text', 'Text'),('number','Number'),('email','Email'),('textarea','Textarea') ]
 
 class ClientForm(forms.ModelForm):
     
@@ -142,17 +148,26 @@ class ClientForm(forms.ModelForm):
         ]
         
 
+
 class AnswerForm(forms.ModelForm):
+    response = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Field1'}), required=True, max_length=100)
     class Meta:
         model = Answer
         fields = ['question', 'response']
 
     def __init__(self, *args, **kwargs):
+        event_obj = kwargs.pop('event_obj', None)
+
         super().__init__(*args, **kwargs)
-        # Customize the widget for the 'response' field based on the question's answer type
-        question = self.fields['question'].queryset.first()
-        if question:
-            answer_type = question.answer_type
+
+        if event_obj:
+            # Customize the queryset for the 'question' field based on the event_obj
+            self.fields['question'].queryset = Client.objects.filter(event=event_obj)
+        new = self.fields['question'].queryset
+        
+        for i in new:
+            answer_type = i.type
             if answer_type == 'text':
                 self.fields['response'].widget = forms.TextInput(attrs={'class': 'form-control'})
             elif answer_type == 'check':
@@ -163,3 +178,4 @@ class AnswerForm(forms.ModelForm):
                 self.fields['response'].widget = forms.EmailInput(attrs={'class': 'form-control'})
             elif answer_type == 'textarea':
                 self.fields['response'].widget = forms.Textarea(attrs={'class': 'form-control'})
+                
