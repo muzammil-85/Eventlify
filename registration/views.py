@@ -425,6 +425,7 @@ def payment_success_view(request,**kwargs):
         signature = request.POST.get('razorpay_signature')
         
         obj = EventRecord.objects.get(slug=kwargs['slug'])
+        print(obj.user)
         organizer = organizerRecord.objects.get(Email=obj.user)
         # need to store this in table
         PaymentRecord.objects.create(order_id=order_id,payment_id=payment_id,signature=signature,organizer=organizer,event=obj,amount=obj.fees)

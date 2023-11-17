@@ -153,8 +153,13 @@ class EventDetail(TemplateView):
                     RegistrationRecord.objects.get(user=request.user, event=obj)
                 except Exception:
                     registered = False
+            print(obj.event_booked)
             return render(request, self.template_name,
-                          {'obj': obj, 'owner': owner, 'registered': registered, 'now': date.today(),'base':base_url})
+                          {'obj': obj, 
+                           'owner': owner, 
+                           'registered': registered, 
+                           'now': date.today(),
+                           'base':base_url})
         except ObjectDoesNotExist:
             messages.error(request, 'Event Not found')
             return redirect('event:event_list')

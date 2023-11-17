@@ -92,7 +92,7 @@ Detail | {{ block.super }}{% endblock %}
         {% if now <= obj.registration_end and obj.registration_open %}
 
 
-                  {% if obj.no_of_tickets >= obj.event_booked %}
+                  {% if obj.no_of_tickets <= obj.event_booked %}
                   <div class="card-body">
                     <button
                     class="btn btn-custom mb-4"

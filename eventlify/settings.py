@@ -83,22 +83,23 @@ WSGI_APPLICATION = 'eventlify.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.environ.get('DATABASE_ENGINE'),
+#         'NAME': os.environ.get('DATABASE_NAME'),
+#         'USER': os.environ.get('DATABASE_USER'),
+#         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+#         'HOST': os.environ.get('DATABASE_HOST'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DATABASE_ENGINE'),
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER': os.environ.get('DATABASE_USER'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'djongo',
-#     'NAME': 'Eventlify',
-#   }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -162,12 +163,20 @@ CONTACT_NUMBER = os.environ.get('CONTACT_NUMBER')
 
 # Email
 
-EMAIL_USE_TLS = bool(os.environ.get('EMAIL_USE_TLS'))
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'connect.eventlify@gmail.com'
+EMAIL_HOST_PASSWORD = 'lvrjfhzxxlzjttlp'
+
+
+# EMAIL_USE_TLS = bool(os.environ.get('EMAIL_USE_TLS'))
+# EMAIL_HOST = os.environ.get('EMAIL_HOST')
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# EMAIL_PORT = os.environ.get('EMAIL_PORT')
+# EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
 # CKEditor Detail
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
